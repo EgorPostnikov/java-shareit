@@ -1,13 +1,14 @@
 package ru.practicum.shareit.item.dto;
 
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
 public class ItemMapper {
-    public static ItemDto toItemDto(Item item) {
+    public ItemDto toItemDto(Item item) {
         return new ItemDto(
                 item.getId(),
                 item.getName(),
@@ -17,7 +18,7 @@ public class ItemMapper {
         );
     }
 
-    public static Item toItem(ItemDto itemDto, Long userId) {
+    public Item toItem(ItemDto itemDto, Long userId) {
         return new Item(
                 itemDto.getId(),
                 itemDto.getName(),
@@ -25,14 +26,13 @@ public class ItemMapper {
                 itemDto.getAvailable(),
                 userId
         );
-
     }
 
-    public static Collection<ItemDto> toItemDtos(Collection<Item> items) {
-        Collection<ItemDto> dtos = new ArrayList<>();
+    public Collection<ItemDto> toItemDtos(Collection<Item> items) {
+        Collection<ItemDto> itemDtos = new ArrayList<>();
         for (Item item : items) {
-            dtos.add(toItemDto(item));
+            itemDtos.add(toItemDto(item));
         }
-        return dtos;
+        return itemDtos;
     }
 }

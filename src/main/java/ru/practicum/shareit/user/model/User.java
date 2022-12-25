@@ -1,12 +1,6 @@
 package ru.practicum.shareit.user.model;
 
 import lombok.*;
-import ru.practicum.shareit.user.validation.Create;
-import ru.practicum.shareit.user.validation.Update;
-import ru.practicum.shareit.user.validation.UsedEmailValidation;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 
 @Setter
 @Getter
