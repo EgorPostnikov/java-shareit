@@ -14,6 +14,7 @@ public class UserStorageInMemory implements UserStorage {
     private static final Logger log = LoggerFactory.getLogger(UserStorageInMemory.class);
     private final HashMap<Long, User> users = new HashMap<>();
     static Long id = 0L;
+
     public Long takeId() {
         return ++id;
     }
@@ -35,7 +36,7 @@ public class UserStorageInMemory implements UserStorage {
     }
 
     @Override
-    public User updateUser(User user){
+    public User updateUser(User user) {
         if (!users.containsKey(user.getId())) {
             throw new NoSuchElementException("User with id " + user.getId() + " didn't found!");
         }
@@ -43,8 +44,9 @@ public class UserStorageInMemory implements UserStorage {
         log.info("User with id {} updated", user.getId());
         return user;
     }
+
     @Override
-    public void deleteUser(Long userId)  {
+    public void deleteUser(Long userId) {
         users.remove(userId);
     }
 

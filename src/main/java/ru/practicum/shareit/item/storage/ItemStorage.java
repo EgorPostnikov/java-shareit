@@ -9,7 +9,7 @@ public interface ItemStorage {
 
     Item getItem(long itemId);
 
-    Item updateItem( Item item);
+    Item updateItem(Item item);
 
     void deleteItem(long itemId);
 

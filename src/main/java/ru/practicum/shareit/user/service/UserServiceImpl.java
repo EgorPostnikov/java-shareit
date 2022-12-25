@@ -35,17 +35,17 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(long userId, UserDto userDto) {
         User user = userMapper.toUser(userDto);
         User updatedUser = userStorage.getUser(userId);
-            user.setId(userId);
-            if (user.getName() == null) {
-                user.setName(updatedUser.getName());
-            }
-            if (user.getEmail() == null) {
-                user.setEmail(updatedUser.getEmail());
-            }
-            if ((!user.getEmail().equals(updatedUser.getEmail()))&& !isNotExistEmail(user.getEmail())){
-                throw new ValidationException("Email already in use.");
-            }
-        return  userMapper.toUserDto(userStorage.updateUser(user));
+        user.setId(userId);
+        if (user.getName() == null) {
+            user.setName(updatedUser.getName());
+        }
+        if (user.getEmail() == null) {
+            user.setEmail(updatedUser.getEmail());
+        }
+        if ((!user.getEmail().equals(updatedUser.getEmail())) && !isNotExistEmail(user.getEmail())) {
+            throw new ValidationException("Email already in use.");
+        }
+        return userMapper.toUserDto(userStorage.updateUser(user));
     }
 
 
