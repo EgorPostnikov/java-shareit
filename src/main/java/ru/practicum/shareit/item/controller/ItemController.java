@@ -3,7 +3,7 @@ package ru.practicum.shareit.item.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.Response;
+import ru.practicum.shareit.response.Response;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.validation.Create;
@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-    ItemService itemService;
+    private final ItemService itemService;
 
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
@@ -29,8 +29,8 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDto getItem(@PathVariable long itemId) {
-        return itemService.getItem(itemId);
+    public ItemDto getItemById(@PathVariable long itemId) {
+        return itemService.getItemById(itemId);
     }
 
     @PatchMapping("/{itemId}")

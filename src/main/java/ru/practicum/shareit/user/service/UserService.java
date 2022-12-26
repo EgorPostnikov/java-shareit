@@ -7,7 +7,7 @@ import java.util.Collection;
 public interface UserService {
     UserDto createUser(UserDto user);
 
-    UserDto getUser(long userId);
+    UserDto getUserById(long userId);
 
     UserDto updateUser(long userId, UserDto user);
 
@@ -16,4 +16,6 @@ public interface UserService {
     Collection<UserDto> getAllUsers();
 
     boolean isNotExistEmail(String email);
+
+    boolean isExistUser(Long userId);
 }

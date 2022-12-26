@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.Response;
+import ru.practicum.shareit.response.Response;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.validation.Create;
@@ -27,8 +27,8 @@ public class UserController {
 
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto getUser(@PathVariable long userId) {
-        return userService.getUser(userId);
+    public UserDto getUserById(@PathVariable long userId) {
+        return userService.getUserById(userId);
     }
 
     @PatchMapping("/{userId}")

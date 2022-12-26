@@ -30,7 +30,7 @@ public class ItemStorageInMemory implements ItemStorage {
     }
 
     @Override
-    public Item getItem(long itemId) {
+    public Item getItemById(long itemId) {
         log.info("Item with id #{} got", itemId);
         return items.get(itemId);
     }
@@ -64,5 +64,10 @@ public class ItemStorageInMemory implements ItemStorage {
                 .filter(Item::getAvailable)
                 .filter(t -> (t.getName().toLowerCase().contains(text) || t.getDescription().toLowerCase().contains(text)))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isExistItem(Long itemId) {
+        return items.containsKey(itemId);
     }
 }

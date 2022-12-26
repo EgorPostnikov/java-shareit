@@ -28,7 +28,7 @@ public class UserStorageInMemory implements UserStorage {
     }
 
     @Override
-    public User getUser(Long userId) throws NoSuchElementException {
+    public User getUserById(Long userId) throws NoSuchElementException {
         if (!users.containsKey(userId)) {
             throw new NoSuchElementException("User with id " + userId + " didn't found!");
         }
@@ -61,6 +61,11 @@ public class UserStorageInMemory implements UserStorage {
         return users.values().stream()
                 .map(User::getEmail)
                 .noneMatch(e -> e.equals(email));
+    }
+
+    @Override
+    public boolean isExistUser(Long userId) {
+        return users.containsKey(userId);
     }
 
 }

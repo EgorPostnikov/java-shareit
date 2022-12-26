@@ -1,15 +1,15 @@
 package ru.practicum.shareit.request;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class ItemRequest {
-    Long id;
-    String description;
-    Long requestor;
-    LocalDateTime created;
+    private Long id;
+    private String description;
+    private Long requestor;
+    private LocalDateTime created;
 }

@@ -18,6 +18,8 @@ import static java.lang.annotation.ElementType.PARAMETER;
 @Constraint(validatedBy = UsedEmailValidator.class)
 public @interface UsedEmailValidation {
     String message() default "Email already in use.";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

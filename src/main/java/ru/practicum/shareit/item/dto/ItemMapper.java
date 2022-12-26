@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.dto;
 
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +25,8 @@ public class ItemMapper {
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
-                userId
+                userId,
+                new ItemRequest()
         );
     }
 

@@ -14,9 +14,9 @@ import java.util.NoSuchElementException;
 @Service
 public class ItemServiceImpl implements ItemService {
 
-    ItemStorage itemStorage;
-    ItemMapper itemMapper;
-    UserService userService;
+    private final ItemStorage itemStorage;
+    private final ItemMapper itemMapper;
+    private final UserService userService;
 
     public ItemServiceImpl(ItemStorage itemInterface, ItemMapper itemMapper, UserService userService) {
         this.itemStorage = itemInterface;
@@ -26,25 +26,28 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto createItem(Long userId, ItemDto itemDto) {
-        userService.getUser(userId);
+        userService.getUserById(userId);
         Item item = itemStorage.createItem(itemMapper.toItem(itemDto, userId));
         return itemMapper.toItemDto(item);
     }
 
     @Override
-    public ItemDto getItem(long itemId) {
-        Item item = itemStorage.getItem(itemId);
+    public ItemDto getItemById(long itemId) {
+        if (!isExistItem(itemId)) {
+            throw new NoSuchElementException("UItem with id #" + itemId + " didn't found!");
+        }
+        Item item = itemStorage.getItemById(itemId);
         return itemMapper.toItemDto(item);
     }
 
     @Override
     public ItemDto updateItem(long userId, ItemDto itemDto) {
         Item item = itemMapper.toItem(itemDto, userId);
-        Item updatedItem = itemStorage.getItem(itemDto.getId());
+        Item updatedItem = itemStorage.getItemById(itemDto.getId());
         if (!(updatedItem.getOwner() == userId)) {
             throw new NoSuchElementException("Access rights are not defined");
         }
-        userService.getUser(userId);
+        userService.getUserById(userId);
         if (item.getName() == null) {
             item.setName(updatedItem.getName());
         }
@@ -77,5 +80,10 @@ public class ItemServiceImpl implements ItemService {
             return Collections.emptyList();
         }
         return itemMapper.toItemDtos(itemStorage.searchItems(text));
+    }
+
+    @Override
+    public boolean isExistItem(Long itemId) {
+        return itemStorage.isExistItem(itemId);
     }
 }

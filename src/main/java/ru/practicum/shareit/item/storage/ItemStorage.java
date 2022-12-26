@@ -7,7 +7,7 @@ import java.util.Collection;
 public interface ItemStorage {
     Item createItem(Item item);
 
-    Item getItem(long itemId);
+    Item getItemById(long itemId);
 
     Item updateItem(Item item);
 
@@ -16,4 +16,6 @@ public interface ItemStorage {
     Collection<Item> getItems(long userId);
 
     Collection<Item> searchItems(String text);
+
+    boolean isExistItem(Long itemId);
 }

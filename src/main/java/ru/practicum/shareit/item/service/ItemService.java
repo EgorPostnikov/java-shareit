@@ -6,9 +6,9 @@ import java.util.Collection;
 
 public interface ItemService {
 
-    ItemDto createItem(Long userId,ItemDto item);
+    ItemDto createItem(Long userId, ItemDto item);
 
-    ItemDto getItem(long itemId);
+    ItemDto getItemById(long itemId);
 
     ItemDto updateItem(long userId, ItemDto item);
 
@@ -17,4 +17,6 @@ public interface ItemService {
     Collection<ItemDto> getItems(long userId);
 
     Collection<ItemDto> searchItems(String text);
+
+    boolean isExistItem(Long itemId);
 }

@@ -8,7 +8,7 @@ public interface UserStorage {
 
     User createUser(User user);
 
-    User getUser(Long id);
+    User getUserById(Long id);
 
     User updateUser(User user);
 
@@ -17,4 +17,6 @@ public interface UserStorage {
     Collection<User> getAllUsers();
 
     boolean isNotExistEmail(String email);
+
+    boolean isExistUser(Long userId);
 }
