@@ -1,6 +1,8 @@
 package ru.practicum.shareit.user.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.shareit.user.validation.Create;
 import ru.practicum.shareit.user.validation.Update;
 import ru.practicum.shareit.user.validation.UsedEmailValidation;

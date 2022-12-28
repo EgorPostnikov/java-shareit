@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
@@ -11,19 +12,15 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
-    private final UserMapper userMapper;
-
-    public UserServiceImpl(UserStorage userStorage, UserMapper userMapper) {
-        this.userStorage = userStorage;
-        this.userMapper = userMapper;
-    }
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        User user = userMapper.toUser(userDto);
-        return userMapper.toUserDto(userStorage.createUser(user));
+        User user = UserMapper.INSTANCE.toUser(userDto);
+        User createdUser = userStorage.createUser(user);
+        return UserMapper.INSTANCE.toUserDto(createdUser);
     }
 
     @Override
@@ -31,12 +28,12 @@ public class UserServiceImpl implements UserService {
         if (!isExistUser(userId)) {
             throw new NoSuchElementException("User with id #" + userId + " didn't found!");
         }
-        return userMapper.toUserDto(userStorage.getUserById(userId));
+        return UserMapper.INSTANCE.toUserDto(userStorage.getUserById(userId));
     }
 
     @Override
     public UserDto updateUser(long userId, UserDto userDto) {
-        User user = userMapper.toUser(userDto);
+        User user = UserMapper.INSTANCE.toUser(userDto);
         User updatedUser = userStorage.getUserById(userId);
         user.setId(userId);
         if (user.getName() == null) {
@@ -48,7 +45,7 @@ public class UserServiceImpl implements UserService {
         if ((!user.getEmail().equals(updatedUser.getEmail())) && !isNotExistEmail(user.getEmail())) {
             throw new ValidationException("Email already in use.");
         }
-        return userMapper.toUserDto(userStorage.updateUser(user));
+        return UserMapper.INSTANCE.toUserDto(userStorage.updateUser(user));
     }
 
     @Override
@@ -58,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Collection<UserDto> getAllUsers() {
-        return userMapper.toUserDtos(userStorage.getAllUsers());
+        return UserMapper.INSTANCE.toUserDtos(userStorage.getAllUsers());
     }
 
     @Override

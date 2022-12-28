@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
@@ -12,23 +13,17 @@ import java.util.Collections;
 import java.util.NoSuchElementException;
 
 @Service
+@AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
     private final ItemStorage itemStorage;
-    private final ItemMapper itemMapper;
     private final UserService userService;
-
-    public ItemServiceImpl(ItemStorage itemInterface, ItemMapper itemMapper, UserService userService) {
-        this.itemStorage = itemInterface;
-        this.itemMapper = itemMapper;
-        this.userService = userService;
-    }
 
     @Override
     public ItemDto createItem(Long userId, ItemDto itemDto) {
         userService.getUserById(userId);
-        Item item = itemStorage.createItem(itemMapper.toItem(itemDto, userId));
-        return itemMapper.toItemDto(item);
+        Item item = itemStorage.createItem(ItemMapper.INSTANCE.toItem(itemDto, userId));
+        return ItemMapper.INSTANCE.toItemDto(item);
     }
 
     @Override
@@ -37,12 +32,12 @@ public class ItemServiceImpl implements ItemService {
             throw new NoSuchElementException("UItem with id #" + itemId + " didn't found!");
         }
         Item item = itemStorage.getItemById(itemId);
-        return itemMapper.toItemDto(item);
+        return ItemMapper.INSTANCE.toItemDto(item);
     }
 
     @Override
     public ItemDto updateItem(long userId, ItemDto itemDto) {
-        Item item = itemMapper.toItem(itemDto, userId);
+        Item item = ItemMapper.INSTANCE.toItem(itemDto, userId);
         Item updatedItem = itemStorage.getItemById(itemDto.getId());
         if (!(updatedItem.getOwner() == userId)) {
             throw new NoSuchElementException("Access rights are not defined");
@@ -60,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
         item.setOwner(updatedItem.getOwner());
         item.setRequest(updatedItem.getRequest());
 
-        return itemMapper.toItemDto(itemStorage.updateItem(item));
+        return ItemMapper.INSTANCE.toItemDto(itemStorage.updateItem(item));
     }
 
     @Override
@@ -70,16 +65,16 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDto> getItems(long userId) {
-        return itemMapper.toItemDtos(itemStorage.getItems(userId));
+        return ItemMapper.INSTANCE.toItemDtos(itemStorage.getItems(userId));
     }
 
     @Override
     public Collection<ItemDto> searchItems(String text) {
         text = text.toLowerCase();
-        if (text.isBlank()) {
+        if (text.isEmpty()) {
             return Collections.emptyList();
         }
-        return itemMapper.toItemDtos(itemStorage.searchItems(text));
+        return ItemMapper.INSTANCE.toItemDtos(itemStorage.searchItems(text));
     }
 
     @Override

@@ -1,35 +1,18 @@
 package ru.practicum.shareit.user.dto;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
-@Component
-public class UserMapper {
-    public UserDto toUserDto(User user) {
-        return new UserDto(
-                user.getId(),
-                user.getName(),
-                user.getEmail()
-        );
-    }
+@Mapper
+public interface UserMapper {
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    public User toUser(UserDto userDto) {
-        return new User(
-                userDto.getId(),
-                userDto.getName(),
-                userDto.getEmail()
-        );
+    UserDto toUserDto(User user);
 
-    }
+    User toUser(UserDto userDto);
 
-    public Collection<UserDto> toUserDtos(Collection<User> users) {
-        Collection<UserDto> dtos = new ArrayList<>();
-        for (User user : users) {
-            dtos.add(toUserDto(user));
-        }
-        return dtos;
-    }
+    Collection<UserDto> toUserDtos(Collection<User> users);
 }
