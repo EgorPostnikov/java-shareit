@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
@@ -80,5 +81,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public boolean isExistItem(Long itemId) {
         return itemStorage.isExistItem(itemId);
+    }
+
+    @Override
+    public CommentDto createComment(CommentDto commentDto) {
+        return null;
     }
 }

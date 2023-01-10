@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.response.Response;
@@ -42,6 +43,7 @@ public class ItemController {
         return itemService.updateItem(userId, item);
     }
 
+
     @DeleteMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteItem(@PathVariable long itemId) {
@@ -58,6 +60,16 @@ public class ItemController {
     @ResponseStatus(HttpStatus.OK)
     public Collection<ItemDto> searchItems(@RequestParam String text) {
         return itemService.searchItems(text);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    @ResponseStatus(HttpStatus.OK)
+    public CommentDto createComment(@PathVariable long itemId,
+                                 @RequestHeader("X-Sharer-User-Id") long userId,
+                                 @RequestBody CommentDto commentDto) {
+        commentDto.setItem(itemId);
+        commentDto.setAuthor(userId);
+        return itemService.createComment(commentDto);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
