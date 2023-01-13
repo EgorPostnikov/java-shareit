@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.storage.UserRepository;
 import ru.practicum.shareit.user.storage.UserStorage;
 import ru.practicum.shareit.user.validation.ValidationException;
 
@@ -15,11 +16,11 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
-
+    private final UserRepository userRepository;
     @Override
     public UserDto createUser(UserDto userDto) {
         User user = UserMapper.INSTANCE.toUser(userDto);
-        User createdUser = userStorage.createUser(user);
+        User createdUser = userRepository.save(user);
         return UserMapper.INSTANCE.toUserDto(createdUser);
     }
 
@@ -28,13 +29,13 @@ public class UserServiceImpl implements UserService {
         if (!isExistUser(userId)) {
             throw new NoSuchElementException("User with id #" + userId + " didn't found!");
         }
-        return UserMapper.INSTANCE.toUserDto(userStorage.getUserById(userId));
+        return UserMapper.INSTANCE.toUserDto(userRepository.getById(userId));
     }
 
     @Override
     public UserDto updateUser(long userId, UserDto userDto) {
         User user = UserMapper.INSTANCE.toUser(userDto);
-        User updatedUser = userStorage.getUserById(userId);
+        User updatedUser = userRepository.getById(userId);
         user.setId(userId);
         if (user.getName() == null) {
             user.setName(updatedUser.getName());
@@ -45,17 +46,17 @@ public class UserServiceImpl implements UserService {
         if ((!user.getEmail().equals(updatedUser.getEmail())) && !isNotExistEmail(user.getEmail())) {
             throw new ValidationException("Email already in use.");
         }
-        return UserMapper.INSTANCE.toUserDto(userStorage.updateUser(user));
+        return UserMapper.INSTANCE.toUserDto(userRepository.saveAndFlush(updatedUser));
     }
 
     @Override
     public void deleteUser(long userId) {
-        userStorage.deleteUser(userId);
+        userRepository.deleteById(userId);
     }
 
     @Override
     public Collection<UserDto> getAllUsers() {
-        return UserMapper.INSTANCE.toUserDtos(userStorage.getAllUsers());
+        return UserMapper.INSTANCE.toUserDtos(userRepository.findAll());
     }
 
     @Override
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isExistUser(Long userId) {
-        return userStorage.isExistUser(userId);
+        return userRepository.existsById(userId);
 
     }
 }
