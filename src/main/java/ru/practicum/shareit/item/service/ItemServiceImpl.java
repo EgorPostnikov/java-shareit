@@ -6,6 +6,7 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.item.storage.ItemStorage;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -19,27 +20,33 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemStorage itemStorage;
     private final UserService userService;
+    private final ItemRepository itemRepository;
+
 
     @Override
     public ItemDto createItem(Long userId, ItemDto itemDto) {
         userService.getUserById(userId);
-        Item item = itemStorage.createItem(ItemMapper.INSTANCE.toItem(itemDto, userId));
+        Item item = itemRepository.save(ItemMapper.INSTANCE.toItem(itemDto, userId));
         return ItemMapper.INSTANCE.toItemDto(item);
     }
 
     @Override
     public ItemDto getItemById(long itemId) {
         if (!isExistItem(itemId)) {
-            throw new NoSuchElementException("UItem with id #" + itemId + " didn't found!");
+            throw new NoSuchElementException("Item with id #" + itemId + " didn't found!");
         }
-        Item item = itemStorage.getItemById(itemId);
+        Item item = itemRepository.getById(itemId);
         return ItemMapper.INSTANCE.toItemDto(item);
+    }
+    @Override
+    public Long getOwnerOfItem(long itemId) {
+        return itemRepository.getById(itemId).getOwner();
     }
 
     @Override
     public ItemDto updateItem(long userId, ItemDto itemDto) {
         Item item = ItemMapper.INSTANCE.toItem(itemDto, userId);
-        Item updatedItem = itemStorage.getItemById(itemDto.getId());
+        Item updatedItem = itemRepository.getById(itemDto.getId());
         if (!(updatedItem.getOwner() == userId)) {
             throw new NoSuchElementException("Access rights are not defined");
         }
@@ -56,17 +63,17 @@ public class ItemServiceImpl implements ItemService {
         item.setOwner(updatedItem.getOwner());
         item.setRequest(updatedItem.getRequest());
 
-        return ItemMapper.INSTANCE.toItemDto(itemStorage.updateItem(item));
+        return ItemMapper.INSTANCE.toItemDto(itemRepository.save(item));
     }
 
     @Override
     public void deleteItem(long itemId) {
-        itemStorage.deleteItem(itemId);
+        itemRepository.deleteById(itemId);
     }
 
     @Override
     public Collection<ItemDto> getItems(long userId) {
-        return ItemMapper.INSTANCE.toItemDtos(itemStorage.getItems(userId));
+        return ItemMapper.INSTANCE.toItemDtos(itemRepository.getItems(userId));
     }
 
     @Override
@@ -75,12 +82,12 @@ public class ItemServiceImpl implements ItemService {
         if (text.isEmpty()) {
             return Collections.emptyList();
         }
-        return ItemMapper.INSTANCE.toItemDtos(itemStorage.searchItems(text));
+        return ItemMapper.INSTANCE.toItemDtos(itemRepository.searchItems(text));
     }
 
     @Override
     public boolean isExistItem(Long itemId) {
-        return itemStorage.isExistItem(itemId);
+        return itemRepository.existsById(itemId);
     }
 
     @Override

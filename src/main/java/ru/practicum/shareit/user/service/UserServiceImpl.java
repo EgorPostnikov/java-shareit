@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserRepository;
 import ru.practicum.shareit.user.storage.UserStorage;
 import ru.practicum.shareit.user.validation.ValidationException;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -46,7 +46,8 @@ public class UserServiceImpl implements UserService {
         if ((!user.getEmail().equals(updatedUser.getEmail())) && !isNotExistEmail(user.getEmail())) {
             throw new ValidationException("Email already in use.");
         }
-        return UserMapper.INSTANCE.toUserDto(userRepository.saveAndFlush(updatedUser));
+        userRepository.save(user);
+        return UserMapper.INSTANCE.toUserDto(userRepository.getById(userId));
     }
 
     @Override
