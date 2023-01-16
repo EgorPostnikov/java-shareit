@@ -2,9 +2,11 @@ package ru.practicum.shareit.booking.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.UnsupportedIdException;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.response.Response;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -20,7 +22,7 @@ public class BookingController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                                 @RequestBody BookingDto bookingDto) {
+                                 @RequestBody BookingDto bookingDto){
         return bookingService.createBooking(userId, bookingDto);
     }
     @PatchMapping("/{bookingId}")
@@ -48,9 +50,14 @@ public class BookingController {
                                         @RequestParam(defaultValue = "ALL") String state) {
         return bookingService.getBookingsOfUsersItems(userId, state);
     }
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
     public Response handleException(NoSuchElementException exception) {
+        return new Response(exception.getMessage());
+    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public Response handleException(EntityNotFoundException exception) {
         return new Response(exception.getMessage());
     }
 }

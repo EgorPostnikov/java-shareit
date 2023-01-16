@@ -14,10 +14,11 @@ import java.util.Collection;
 public interface BookingMapper {
     BookingMapper INSTANCE = Mappers.getMapper(BookingMapper.class);
 
+    @Mapping(target = "itemId",source ="item")
     BookingDto toBookingDto(Booking booking);
 
-    @Mapping(target = "item",source ="bookingDto.itemId")
-    @Mapping(target = "status",source = "bookingDto.status", defaultValue = "WAITING")
+    @Mapping(target = "item",source ="itemId")
+    @Mapping(target = "status",source = "status", defaultValue = "WAITING")
     Booking toBooking(BookingDto bookingDto);
 
     Collection<BookingDto> toBookingDtos(Collection<Booking> bookings);

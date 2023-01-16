@@ -39,6 +39,13 @@ public class ItemServiceImpl implements ItemService {
         return ItemMapper.INSTANCE.toItemDto(item);
     }
     @Override
+    public Item getItem(long itemId) {
+        if (!isExistItem(itemId)) {
+            throw new NoSuchElementException("Item with id #" + itemId + " didn't found!");
+        }
+        return itemRepository.getById(itemId);
+    }
+    @Override
     public Long getOwnerOfItem(long itemId) {
         return itemRepository.getById(itemId).getOwner();
     }
