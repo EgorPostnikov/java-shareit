@@ -4,9 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.UnsupportedIdException;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingShort;
 import ru.practicum.shareit.response.Response;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -22,8 +24,8 @@ public class BookingController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                                 @RequestBody BookingDto bookingDto){
-        return bookingService.createBooking(userId, bookingDto);
+                                 @RequestBody BookingShort bookingShort){
+        return bookingService.createBooking(userId, bookingShort);
     }
     @PatchMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.OK)
@@ -40,13 +42,13 @@ public class BookingController {
     }
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<BookingDto> getBookingsOfUser(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                        @RequestParam(defaultValue = "ALL") String state) {
+    public Collection<BookingDto> getBookingsOfUser(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                    @RequestParam(defaultValue = "ALL") String state) {
         return bookingService.getBookingsOfUser(userId, state);
     }
     @GetMapping("/owner")
     @ResponseStatus(HttpStatus.OK)
-    public List<BookingDto> getBookingsOfUsersItems(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public Collection<BookingDto> getBookingsOfUsersItems(@RequestHeader("X-Sharer-User-Id") Long userId,
                                         @RequestParam(defaultValue = "ALL") String state) {
         return bookingService.getBookingsOfUsersItems(userId, state);
     }

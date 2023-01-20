@@ -2,23 +2,17 @@ package ru.practicum.shareit.booking.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.UnsupportedIdException;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.booking.dto.*;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.item.storage.ItemRepository;
-import ru.practicum.shareit.user.controller.UserController;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
-import java.time.Instant;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 
 @Service
@@ -29,65 +23,98 @@ public class BookingServiceImpl implements BookingService{
     private final BookingRepository bookingRepository;
     private final UserService userService;
     private final ItemService itemService;
+    private final BookingMapperImp bookingMapperImp;
     @Override
-    public BookingDto createBooking(Long userId, BookingDto bookingDto)  {
+    public BookingDto createBooking(Long userId, BookingShort bookingShort)  {
+        Item item = itemService.getItem(bookingShort.getItemId());
         if (!userService.isExistUser(userId)){
             throw new NoSuchElementException("  User id did not found");
         }
-        if (!itemService.getItem(bookingDto.getItemId()).getAvailable()){
+        if (!item.getAvailable()){
             throw new EntityNotFoundException("  Item not available for booking!");
         }
-        if (bookingDto.getEnd().isBefore(bookingDto.getStart())) {
+        if (bookingShort.getEnd().isBefore(bookingShort.getStart())) {
             throw new EntityNotFoundException("  Booking end time is before start time!");
         }
-        if (bookingDto.getEnd().isBefore(LocalDateTime.now())
-                ||(bookingDto.getStart().isBefore(LocalDateTime.now()))){
+        if (bookingShort.getEnd().isBefore(LocalDateTime.now())
+                ||(bookingShort.getStart().isBefore(LocalDateTime.now()))){
             throw new EntityNotFoundException("  Time in the past!");
         }
 
-            Booking booking = BookingMapper.INSTANCE.toBooking(bookingDto);
-        booking.setBooker(userId);
-
-        if (itemService.getOwnerOfItem(bookingDto.getItemId())==userId){
+        if (itemService.getOwnerOfItem(bookingShort.getItemId())==userId){
             throw new EntityNotFoundException("Id's not correct!");
         }
-        booking = bookingRepository.save(booking);
-        System.out.println(booking.toString());
-        System.out.println(BookingMapper.INSTANCE.toBookingDto(booking).toString());
-        return BookingMapper.INSTANCE.toBookingDto(booking);
-    }
+        Booking booking = bookingMapperImp.toBooking(bookingShort);
+        booking.getBooker().setId(userId);
+        booking.getItem().setName(item.getName());
+        Booking booking2 = bookingRepository.save(booking);
+        BookingDto bookingDto1 = BookingMapper.INSTANCE.toBookingDto(booking2);
 
+        return bookingDto1;
+    }
 
     @Override
+    @Transactional
     public BookingDto updateBooking(Long bookingId, Long userId, Boolean approved) {
-        Booking booking = bookingRepository.getById(bookingId);
-        if (itemService.getOwnerOfItem(bookingId)!=userId) {
-            return null;
-        }
-          if(approved) {
-            booking.setStatus(Status.APPROVED);
-        } else {
-            booking.setStatus(Status.REJECTED);
-        }
-        return BookingMapper.INSTANCE.toBookingDto(bookingRepository.save(booking));
-    }
 
+    Booking booking =  bookingRepository.getById(bookingId);
+        System.out.println(booking.toString());
+    BookedItem  bookedItem = booking.getItem();
+    Long itemId=bookedItem.getId();
+    Item item = itemService.getItem(itemId);
+    if (item.getOwner()!=userId){
+        throw new NoSuchElementException("  User id did not found");
+    }
+    if (approved) {
+        booking.setStatus(Status.APPROVED);
+    } else {
+        booking.setStatus(Status.REJECTED);
+    }
+        Booking bookingGot =bookingRepository.save(booking);
+    return BookingMapper.INSTANCE.toBookingDto(bookingGot);
+    }
     @Override
     public BookingDto getBookingById(Long bookingId, Long userId) {
+       /*if (!isExistItem(itemId)) {
+            throw new NoSuchElementException("Item with id #" + itemId + " didn't found!");
+        }*/
         Booking booking = bookingRepository.getById(bookingId);
-        if (booking.getBooker()!=userId ||itemService.getOwnerOfItem(bookingId)!=userId) {
-            return null;
+        Item item = itemService.getItem(booking.getItem().getId());
+        if ((booking.getBooker().getId()!=userId)&&(item.getOwner()!=userId)){
+            throw new NoSuchElementException("  User id did not found");
         }
         return BookingMapper.INSTANCE.toBookingDto(booking);
     }
 
     @Override
-    public List<BookingDto> getBookingsOfUser(Long userId, String state) {
-        return null;
+    public Collection<BookingDto> getBookingsOfUser(Long userId, String state) {
+        Collection<Booking> bookings= bookingRepository.getBookingsOfUser(userId,state);
+        return  BookingMapper.INSTANCE.toBookingDtos(bookings);
     }
 
     @Override
-    public List<BookingDto> getBookingsOfUsersItems(Long userId, String state) {
-        return null;
+    public Collection<BookingDto> getBookingsOfUsersItems(Long userId, String state) {
+        Collection<Booking> bookings= bookingRepository.getBookingsOfUsersItems(userId,state);
+        return  BookingMapper.INSTANCE.toBookingDtos(bookings);
     }
 }
+
+        /*Item item = itemService.getItem(bookingShort.getItemId());
+
+        if (!userService.isExistUser(userId)){
+            throw new NoSuchElementException("  User id did not found");
+        }
+        if (!item.getAvailable()){
+            throw new EntityNotFoundException("  Item not available for booking!");
+        }
+        if (bookingShort.getEnd().isBefore(bookingShort.getStart())) {
+            throw new EntityNotFoundException("  Booking end time is before start time!");
+        }
+        if (bookingShort.getEnd().isBefore(LocalDateTime.now())
+                ||(bookingShort.getStart().isBefore(LocalDateTime.now()))){
+            throw new EntityNotFoundException("  Time in the past!");
+        }
+
+        if (itemService.getOwnerOfItem(bookingShort.getItemId())==userId){
+            throw new EntityNotFoundException("Id's not correct!");
+        }*/
