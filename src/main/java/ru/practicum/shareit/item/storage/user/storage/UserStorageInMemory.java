@@ -1,9 +1,9 @@
-package ru.practicum.shareit.user.storage;
+package ru.practicum.shareit.item.storage.user.storage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.storage.user.model.User;
 
 import java.util.Collection;
 import java.util.HashMap;

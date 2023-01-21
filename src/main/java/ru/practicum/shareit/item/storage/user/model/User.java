@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.model;
+package ru.practicum.shareit.item.storage.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

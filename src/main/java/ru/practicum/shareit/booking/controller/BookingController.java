@@ -1,15 +1,20 @@
 package ru.practicum.shareit.booking.controller;
 
+import org.springframework.beans.TypeMismatchException;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.UnsupportedIdException;
+import ru.practicum.shareit.ErrorResponse;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShort;
+import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.booking.service.BookingServiceImpl;
 import ru.practicum.shareit.response.Response;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -43,13 +48,13 @@ public class BookingController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Collection<BookingDto> getBookingsOfUser(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                    @RequestParam(defaultValue = "ALL") String state) {
+                                                    @RequestParam(defaultValue = "ALL") State state) {
         return bookingService.getBookingsOfUser(userId, state);
     }
     @GetMapping("/owner")
     @ResponseStatus(HttpStatus.OK)
     public Collection<BookingDto> getBookingsOfUsersItems(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                        @RequestParam(defaultValue = "ALL") String state) {
+                                        @RequestParam(defaultValue = "ALL") State state) {
         return bookingService.getBookingsOfUsersItems(userId, state);
     }
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -62,4 +67,12 @@ public class BookingController {
     public Response handleException(EntityNotFoundException exception) {
         return new Response(exception.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler()
+    public Map<String, String> handleConversionException(final ConversionFailedException e) {
+        return Map.of("error", "Unknown state: UNSUPPORTED_STATUS");
+    }
+
+//"Unknown state: UNSUPPORTED_STATUS"
 }

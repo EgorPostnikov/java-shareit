@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.shareit.booking.dto.BookedItem;
 import ru.practicum.shareit.booking.dto.Booker;
-import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

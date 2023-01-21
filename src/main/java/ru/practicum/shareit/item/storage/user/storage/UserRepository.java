@@ -1,7 +1,7 @@
-package ru.practicum.shareit.user.storage;
+package ru.practicum.shareit.item.storage.user.storage;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.storage.user.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 

@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.validation;
+package ru.practicum.shareit.item.storage.user.validation;
 
 
 import javax.validation.Constraint;

@@ -1,7 +1,7 @@
-package ru.practicum.shareit.user.validation;
+package ru.practicum.shareit.item.storage.user.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.item.storage.user.service.UserService;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

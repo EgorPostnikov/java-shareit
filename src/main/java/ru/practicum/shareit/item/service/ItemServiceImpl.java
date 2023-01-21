@@ -2,23 +2,25 @@ package ru.practicum.shareit.item.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.storage.BookingRepository;
+import ru.practicum.shareit.item.model.ItemBooking;
+import ru.practicum.shareit.item.model.dto.CommentDto;
+import ru.practicum.shareit.item.model.dto.ItemBookingDto;
+import ru.practicum.shareit.item.model.dto.ItemDto;
+import ru.practicum.shareit.item.model.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
-import ru.practicum.shareit.item.storage.ItemStorage;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.item.storage.user.service.UserService;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.NoSuchElementException;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
-    private final ItemStorage itemStorage;
+    private final BookingRepository bookingRepository;
     private final UserService userService;
     private final ItemRepository itemRepository;
 
@@ -36,8 +38,12 @@ public class ItemServiceImpl implements ItemService {
             throw new NoSuchElementException("Item with id #" + itemId + " didn't found!");
         }
         Item item = itemRepository.getById(itemId);
-        return ItemMapper.INSTANCE.toItemDto(item);
+        ItemDto itemDto = ItemMapper.INSTANCE.toItemDto(item);
+        itemDto.setNextBooking(getNextBooking(item.getId()));
+        itemDto.setLastBooking(getLastBooking(item.getId()));
+        return itemDto;
     }
+
     @Override
     public Item getItem(long itemId) {
         if (!isExistItem(itemId)) {
@@ -45,6 +51,7 @@ public class ItemServiceImpl implements ItemService {
         }
         return itemRepository.getById(itemId);
     }
+
     @Override
     public Long getOwnerOfItem(long itemId) {
         return itemRepository.getById(itemId).getOwner();
@@ -80,7 +87,21 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDto> getItems(long userId) {
-        return ItemMapper.INSTANCE.toItemDtos(itemRepository.getItems(userId));
+        Collection<Item> items = itemRepository.getItems(userId);
+        if (items == null) {
+            return null;
+        } else {
+            Collection<ItemDto> collection = new ArrayList(items.size());
+            Iterator var3 = items.iterator();
+            while (var3.hasNext()) {
+                Item item = (Item) var3.next();
+                ItemDto itemDto = ItemMapper.INSTANCE.toItemDto(item);
+                itemDto.setNextBooking(getNextBooking(item.getId()));
+                itemDto.setLastBooking(getLastBooking(item.getId()));
+                collection.add(itemDto);
+            }
+            return collection;
+        }
     }
 
     @Override
@@ -89,6 +110,7 @@ public class ItemServiceImpl implements ItemService {
         if (text.isEmpty()) {
             return Collections.emptyList();
         }
+
         return ItemMapper.INSTANCE.toItemDtos(itemRepository.searchItems(text));
     }
 
@@ -100,5 +122,25 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentDto createComment(CommentDto commentDto) {
         return null;
+    }
+
+    public ItemBookingDto getLastBooking(Long itemId) {
+        List<Booking> bookings = bookingRepository.findBookingByItem_IdAndEndIsBeforeOrderByEndDesc(itemId, LocalDateTime.now());
+        if (bookings.isEmpty()) {
+            return null;
+        } else {
+            Booking booking = bookings.get(0);
+            return new ItemBookingDto(booking.getId(), booking.getBooker().getId());
+        }
+    }
+
+    public ItemBookingDto getNextBooking(Long itemId) {
+        List<Booking> bookings = bookingRepository.findBookingByItem_IdAndStartIsAfterOrderByStart(itemId, LocalDateTime.now());
+        if (bookings.isEmpty()) {
+            return null;
+        } else {
+            Booking booking = bookings.get(0);
+            return new ItemBookingDto(booking.getId(), booking.getBooker().getId());
+        }
     }
 }

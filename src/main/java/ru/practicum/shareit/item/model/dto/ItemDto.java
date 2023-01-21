@@ -1,9 +1,9 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.user.validation.Create;
+import ru.practicum.shareit.item.storage.user.validation.Create;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,5 +22,7 @@ public class ItemDto {
     @NotNull(message = "Availability is required.", groups = {Create.class})
     private Boolean available;
     private Long requestId;
+    private ItemBookingDto lastBooking;
+    private ItemBookingDto nextBooking;
 
 }
