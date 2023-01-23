@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
+import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.dto.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
@@ -19,8 +19,8 @@ import java.util.*;
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
-    private final BookingRepository bookingRepository;
     private final UserService userService;
+    private final BookingRepository bookingRepository;
     private final ItemRepository itemRepository;
     private final CommentRepository commentRepository;
 
@@ -33,14 +33,18 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto getItemById(long itemId) {
+    public ItemDtoWithComments getItemById(long itemId, Long userId) {
         if (!isExistItem(itemId)) {
             throw new NoSuchElementException("Item with id #" + itemId + " didn't found!");
         }
         Item item = itemRepository.getById(itemId);
-        ItemDto itemDto = ItemMapper.INSTANCE.toItemDto(item);
-        itemDto.setNextBooking(getNextBooking(item.getId()));
-        itemDto.setLastBooking(getLastBooking(item.getId()));
+        ItemDtoWithComments itemDto = ItemMapper.INSTANCE.toItemDtoWithComments(item);
+        Boolean isOwner = (item.getOwner()==userId);
+        if (isOwner) {
+            itemDto.setNextBooking(getNextBooking(itemId));
+            itemDto.setLastBooking(getLastBooking(itemId));
+        }
+        itemDto.setComments(getCommentsByItemId(itemId));
         return itemDto;
     }
 
@@ -86,18 +90,23 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> getItems(long userId) {
+    public Collection<ItemDtoWithComments> getItems(long userId) {
         Collection<Item> items = itemRepository.getItems(userId);
         if (items == null) {
             return null;
         } else {
-            Collection<ItemDto> collection = new ArrayList(items.size());
+            Collection<ItemDtoWithComments> collection = new ArrayList(items.size());
             Iterator var3 = items.iterator();
             while (var3.hasNext()) {
                 Item item = (Item) var3.next();
-                ItemDto itemDto = ItemMapper.INSTANCE.toItemDto(item);
-                itemDto.setNextBooking(getNextBooking(item.getId()));
-                itemDto.setLastBooking(getLastBooking(item.getId()));
+                Long itemId= item.getId();
+                Boolean isOwner = (item.getOwner()==userId);
+                ItemDtoWithComments itemDto = ItemMapper.INSTANCE.toItemDtoWithComments(item);
+                if (isOwner) {
+                    itemDto.setNextBooking(getNextBooking(itemId));
+                    itemDto.setLastBooking(getLastBooking(itemId));
+                }
+                itemDto.setComments(getCommentsByItemId(itemId));
                 collection.add(itemDto);
             }
             return collection;
@@ -119,17 +128,6 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.existsById(itemId);
     }
 
-    @Override
-    public CommentDto createComment(CommentDto commentDto) {
-        if (commentDto.getText().isBlank()){
-            throw new EntityNotFoundException("Text is empty");
-        }
-        if (!bookingRepository.getBookedItemsIds(commentDto.getAuthor(), LocalDateTime.now()).contains(commentDto.getItem())){
-            throw new EntityNotFoundException("Item was not booked by author of comment");
-        }
-        Comment comment = commentRepository.save(CommentMapper.INSTANCE.toComment(commentDto));
-        return CommentMapper.INSTANCE.toCommentDto(comment);
-    }
 
     public ItemBookingDto getLastBooking(Long itemId) {
         List<Booking> bookings = bookingRepository.findBookingByItem_IdAndEndIsBeforeOrderByEndDesc(itemId, LocalDateTime.now());
@@ -149,5 +147,24 @@ public class ItemServiceImpl implements ItemService {
             Booking booking = bookings.get(0);
             return new ItemBookingDto(booking.getId(), booking.getBooker().getId());
         }
+    }
+
+    @Override
+    public CommentDto createComment(CommentDto commentDto) {
+        Long authorId = commentDto.getAuthorId();
+        if (commentDto.getText().isBlank()) {
+            throw new EntityNotFoundException("Text is empty");
+        }
+        if (!bookingRepository.getBookedItemsIds(authorId, LocalDateTime.now()).contains(commentDto.getItem())) {
+            throw new EntityNotFoundException("Item was not booked by author of comment");
+        }
+        Comment comment = CommentMapper.INSTANCE.toComment(commentDto);
+        comment = commentRepository.save(comment);
+        comment.setAuthorName(userService.getUserById(authorId).getName());
+        return CommentMapper.INSTANCE.toCommentDto(comment);
+    }
+
+    public Collection<CommentDto> getCommentsByItemId (Long itemId){
+        return CommentMapper.INSTANCE.toCommentDtos(commentRepository.getCommentsByItemEquals(itemId));
     }
 }

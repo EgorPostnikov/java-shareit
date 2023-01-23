@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.model.dto;
+package ru.practicum.shareit.item.dto;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,11 +14,10 @@ public interface ItemMapper {
 
     @Mapping(target = "requestId", source = "item.request.id")
     ItemDto toItemDto(Item item);
-
+    @Mapping(target = "requestId", source = "item.request.id")
+    ItemDtoWithComments toItemDtoWithComments(Item item);
     @Mapping(target = "owner", source = "userId")
     Item toItem(ItemDto itemDto, Long userId);
-
-    ItemBookingDto toItemBookingDto(ItemBooking itemBooking);
-
     Collection<ItemDto> toItemDtos(Collection<Item> items);
+    //Collection<ItemDtoWithComments> toItemDtoWithComments(Collection<Item> items);
 }

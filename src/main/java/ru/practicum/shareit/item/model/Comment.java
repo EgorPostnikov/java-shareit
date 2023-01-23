@@ -21,6 +21,9 @@ public class Comment {
     @Column(name="item_id")
     private Long item;
     @Column(name="author_id")
-    private Long author;
+    private Long authorId;
     private LocalDateTime created=LocalDateTime.now();
+    @Transient
+    private String authorName;
+
 }

@@ -1,6 +1,7 @@
-package ru.practicum.shareit.item.model.dto;
+package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,5 +12,6 @@ public class CommentDto {
     private Long id;
     private String text;
     private Long item;
-    private Long author;
+    private Long authorId;
+    private String authorName;
 }

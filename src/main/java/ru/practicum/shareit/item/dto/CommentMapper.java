@@ -1,11 +1,9 @@
-package ru.practicum.shareit.item.model.dto;
+package ru.practicum.shareit.item.dto;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.model.ItemBooking;
 
 import java.util.Collection;
 
@@ -16,7 +14,7 @@ public interface CommentMapper {
     @Mapping (target ="id", source = "id")
     CommentDto toCommentDto(Comment comment);
 
-
+    @Mapping (target ="authorId", source = "authorId")
     Comment toComment(CommentDto commentDto);
 
     Collection<CommentDto> toCommentDtos(Collection<Comment> comments);
