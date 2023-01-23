@@ -7,8 +7,9 @@ import ru.practicum.shareit.item.model.dto.CommentDto;
 import ru.practicum.shareit.item.model.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.response.Response;
-import ru.practicum.shareit.item.storage.user.validation.Create;
+import ru.practicum.shareit.user.validation.Create;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
@@ -75,6 +76,12 @@ public class ItemController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
     public Response handleException(NoSuchElementException exception) {
+        return new Response(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public Response handleException(EntityNotFoundException exception) {
         return new Response(exception.getMessage());
     }
 

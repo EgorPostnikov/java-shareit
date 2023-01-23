@@ -4,15 +4,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
-import ru.practicum.shareit.item.model.ItemBooking;
-import ru.practicum.shareit.item.model.dto.CommentDto;
-import ru.practicum.shareit.item.model.dto.ItemBookingDto;
-import ru.practicum.shareit.item.model.dto.ItemDto;
-import ru.practicum.shareit.item.model.dto.ItemMapper;
+import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.item.model.dto.*;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
-import ru.practicum.shareit.item.storage.user.service.UserService;
+import ru.practicum.shareit.user.service.UserService;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -23,6 +22,7 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final UserService userService;
     private final ItemRepository itemRepository;
+    private final CommentRepository commentRepository;
 
 
     @Override
@@ -121,7 +121,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentDto createComment(CommentDto commentDto) {
-        return null;
+        if (commentDto.getText().isBlank()){
+            throw new EntityNotFoundException("Text is empty");
+        }
+        if (!bookingRepository.getBookedItemsIds(commentDto.getAuthor(), LocalDateTime.now()).contains(commentDto.getItem())){
+            throw new EntityNotFoundException("Item was not booked by author of comment");
+        }
+        Comment comment = commentRepository.save(CommentMapper.INSTANCE.toComment(commentDto));
+        return CommentMapper.INSTANCE.toCommentDto(comment);
     }
 
     public ItemBookingDto getLastBooking(Long itemId) {

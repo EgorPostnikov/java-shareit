@@ -9,7 +9,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.item.storage.user.service.UserService;
+import ru.practicum.shareit.user.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -104,22 +104,22 @@ public class BookingServiceImpl implements BookingService {
         Collection<Booking> bookings = null;
         switch (state){
             case WAITING:
-                bookings = bookingRepository.findBookingByBooker_IdAndStatus(userId, Status.WAITING);
+                bookings = bookingRepository.findBookingByBooker_IdAndStatusOrderByStartDesc(userId, Status.WAITING);
                 break;
             case REJECTED:
-                bookings = bookingRepository.findBookingByBooker_IdAndStatus(userId, Status.REJECTED);
+                bookings = bookingRepository.findBookingByBooker_IdAndStatusOrderByStartDesc(userId, Status.REJECTED);
                 break;
             case ALL:
                 bookings = bookingRepository.findBookingByBooker_IdOrderByStartDesc(userId);
                 break;
             case PAST:
-                bookings = bookingRepository.findBookingByBooker_IdAndEndBefore(userId,currentTime);
+                bookings = bookingRepository.findBookingByBooker_IdAndEndBeforeOrderByStartDesc(userId,currentTime);
                 break;
             case CURRENT:
-                bookings =bookingRepository.findBookingByBooker_IdAndEndAfterAndStartBefore(userId,currentTime,currentTime);
+                bookings =bookingRepository.findBookingByBooker_IdAndEndAfterAndStartBeforeOrderByStartDesc(userId,currentTime,currentTime);
                 break;
             case FUTURE:
-                bookings =bookingRepository.findBookingByBooker_IdAndEndAfter(userId,currentTime);
+                bookings =bookingRepository.findBookingByBooker_IdAndEndAfterOrderByStartDesc(userId,currentTime);
                 break;
         }
             return BookingMapper.INSTANCE.toBookingDtos(bookings);
@@ -135,22 +135,22 @@ public class BookingServiceImpl implements BookingService {
         Collection<Booking> bookings = null;
         switch (state){
             case WAITING:
-                bookings = bookingRepository.findBookingByItem_OwnerAndStatus(userId, Status.WAITING);
+                bookings = bookingRepository.findBookingByItem_OwnerAndStatusOrderByStartDesc(userId, Status.WAITING);
                 break;
             case REJECTED:
-                bookings = bookingRepository.findBookingByItem_OwnerAndStatus(userId, Status.REJECTED);
+                bookings = bookingRepository.findBookingByItem_OwnerAndStatusOrderByStartDesc(userId, Status.REJECTED);
                 break;
             case ALL:
                 bookings = bookingRepository.findBookingByItem_OwnerOrderByStartDesc(userId);
                 break;
             case PAST:
-                bookings = bookingRepository.findBookingByItem_OwnerAndEndBefore(userId,currentTime);
+                bookings = bookingRepository.findBookingByItem_OwnerAndEndBeforeOrderByStartDesc(userId,currentTime);
                 break;
             case CURRENT:
-                bookings =bookingRepository.findBookingByItem_OwnerAndEndAfterAndStartBefore(userId,currentTime,currentTime);
+                bookings =bookingRepository.findBookingByItem_OwnerAndEndAfterAndStartBeforeOrderByStartDesc(userId,currentTime,currentTime);
                 break;
             case FUTURE:
-                bookings =bookingRepository.findBookingByItem_OwnerAndEndAfter(userId,currentTime);
+                bookings =bookingRepository.findBookingByItem_OwnerAndEndAfterOrderByStartDesc(userId,currentTime);
                 break;
         }
         return BookingMapper.INSTANCE.toBookingDtos(bookings);

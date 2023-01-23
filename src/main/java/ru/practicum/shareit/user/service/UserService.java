@@ -1,6 +1,6 @@
-package ru.practicum.shareit.item.storage.user.service;
+package ru.practicum.shareit.user.service;
 
-import ru.practicum.shareit.item.storage.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.Collection;
 

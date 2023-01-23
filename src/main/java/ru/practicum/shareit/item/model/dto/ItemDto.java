@@ -3,7 +3,7 @@ package ru.practicum.shareit.item.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.item.storage.user.validation.Create;
+import ru.practicum.shareit.user.validation.Create;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

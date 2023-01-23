@@ -1,14 +1,14 @@
-package ru.practicum.shareit.item.storage.user.controller;
+package ru.practicum.shareit.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.storage.user.dto.UserDto;
-import ru.practicum.shareit.item.storage.user.validation.Create;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.validation.Create;
 import ru.practicum.shareit.response.Response;
-import ru.practicum.shareit.item.storage.user.service.UserService;
-import ru.practicum.shareit.item.storage.user.validation.ValidationException;
+import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.validation.ValidationException;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
