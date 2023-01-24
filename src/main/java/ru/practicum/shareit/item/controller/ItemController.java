@@ -34,7 +34,7 @@ public class ItemController {
     @ResponseStatus(HttpStatus.OK)
     public ItemDtoWithComments getItemById(@RequestHeader("X-Sharer-User-Id") Long userId,
                                            @PathVariable long itemId) {
-        return itemService.getItemById(itemId,userId);
+        return itemService.getItemById(itemId, userId);
     }
 
     @PatchMapping("/{itemId}")
@@ -68,8 +68,8 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     @ResponseStatus(HttpStatus.OK)
     public CommentDto createComment(@PathVariable long itemId,
-                                 @RequestHeader("X-Sharer-User-Id") long userId,
-                                 @RequestBody CommentDto commentDto) {
+                                    @RequestHeader("X-Sharer-User-Id") long userId,
+                                    @RequestBody CommentDto commentDto) {
         commentDto.setItem(itemId);
         commentDto.setAuthorId(userId);
         return itemService.createComment(commentDto);

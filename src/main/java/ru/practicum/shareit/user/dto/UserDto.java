@@ -20,6 +20,4 @@ public class UserDto {
     @Email(message = "Invalid email.", groups = {Create.class, Update.class})
     @UsedEmailValidation(groups = {Create.class})
     private String email;
-
-
 }

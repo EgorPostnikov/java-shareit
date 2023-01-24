@@ -19,11 +19,11 @@ public class Item {
     private Long id;
     private String name;
     private String description;
-    @Column(name="is_available")
+    @Column(name = "is_available")
     private Boolean available;
-    @Column(name="owner_id")
+    @Column(name = "owner_id")
     private Long owner;
-    @Column(name="request_id")
+    @Column(name = "request_id")
     @Transient
     private ItemRequest request;
 

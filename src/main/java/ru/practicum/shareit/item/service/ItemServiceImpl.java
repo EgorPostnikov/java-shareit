@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.item.dto.*;
-import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
@@ -39,7 +38,7 @@ public class ItemServiceImpl implements ItemService {
         }
         Item item = itemRepository.getById(itemId);
         ItemDtoWithComments itemDto = ItemMapper.INSTANCE.toItemDtoWithComments(item);
-        Boolean isOwner = (item.getOwner()==userId);
+        Boolean isOwner = (item.getOwner() == userId);
         if (isOwner) {
             itemDto.setNextBooking(getNextBooking(itemId));
             itemDto.setLastBooking(getLastBooking(itemId));
@@ -99,8 +98,8 @@ public class ItemServiceImpl implements ItemService {
             Iterator var3 = items.iterator();
             while (var3.hasNext()) {
                 Item item = (Item) var3.next();
-                Long itemId= item.getId();
-                Boolean isOwner = (item.getOwner()==userId);
+                Long itemId = item.getId();
+                Boolean isOwner = (item.getOwner() == userId);
                 ItemDtoWithComments itemDto = ItemMapper.INSTANCE.toItemDtoWithComments(item);
                 if (isOwner) {
                     itemDto.setNextBooking(getNextBooking(itemId));
@@ -160,11 +159,11 @@ public class ItemServiceImpl implements ItemService {
         }
         Comment comment = CommentMapper.INSTANCE.toComment(commentDto);
         comment = commentRepository.save(comment);
-        comment.setAuthorName(userService.getUserById(authorId).getName());
+        comment.getAuthor().setName(userService.getUserById(authorId).getName());
         return CommentMapper.INSTANCE.toCommentDto(comment);
     }
 
-    public Collection<CommentDto> getCommentsByItemId (Long itemId){
+    public Collection<CommentDto> getCommentsByItemId(Long itemId) {
         return CommentMapper.INSTANCE.toCommentDtos(commentRepository.getCommentsByItemEquals(itemId));
     }
 }

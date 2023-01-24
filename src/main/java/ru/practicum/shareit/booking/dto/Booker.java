@@ -2,7 +2,9 @@ package ru.practicum.shareit.booking.dto;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Setter
 @Getter

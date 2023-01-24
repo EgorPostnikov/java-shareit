@@ -1,11 +1,8 @@
 package ru.practicum.shareit.booking.controller;
 
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.ErrorResponse;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShort;
 import ru.practicum.shareit.booking.service.BookingService;
@@ -29,9 +26,10 @@ public class BookingController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                                 @RequestBody BookingShort bookingShort){
+                                    @RequestBody BookingShort bookingShort) {
         return bookingService.createBooking(userId, bookingShort);
     }
+
     @PatchMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.OK)
     public BookingDto updateBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
@@ -39,29 +37,34 @@ public class BookingController {
                                     @RequestParam Boolean approved) {
         return bookingService.updateBooking(bookingId, userId, approved);
     }
+
     @GetMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.OK)
     public BookingDto getBookingById(@PathVariable long bookingId,
-                                    @RequestHeader("X-Sharer-User-Id") Long userId) {
-        return bookingService.getBookingById(bookingId,userId);
+                                     @RequestHeader("X-Sharer-User-Id") Long userId) {
+        return bookingService.getBookingById(bookingId, userId);
     }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Collection<BookingDto> getBookingsOfUser(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                     @RequestParam(defaultValue = "ALL") State state) {
         return bookingService.getBookingsOfUser(userId, state);
     }
+
     @GetMapping("/owner")
     @ResponseStatus(HttpStatus.OK)
     public Collection<BookingDto> getBookingsOfUsersItems(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                        @RequestParam(defaultValue = "ALL") State state) {
+                                                          @RequestParam(defaultValue = "ALL") State state) {
         return bookingService.getBookingsOfUsersItems(userId, state);
     }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
     public Response handleException(NoSuchElementException exception) {
         return new Response(exception.getMessage());
     }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EntityNotFoundException.class)
     public Response handleException(EntityNotFoundException exception) {
