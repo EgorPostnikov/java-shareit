@@ -15,7 +15,7 @@ public interface UserService {
 
     Collection<UserDto> getAllUsers();
 
-    boolean isNotExistEmail(String email);
+    boolean isExistEmail(String email);
 
     boolean isExistUser(Long userId);
 }

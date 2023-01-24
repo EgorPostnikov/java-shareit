@@ -1,10 +1,18 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
-import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemBookingDto;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoWithComments;
+import ru.practicum.shareit.item.mapper.CommentMapper;
+import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
@@ -18,16 +26,17 @@ import java.util.*;
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
+    private static final Logger log = LoggerFactory.getLogger(ItemServiceImpl.class);
     private final UserService userService;
     private final BookingRepository bookingRepository;
     private final ItemRepository itemRepository;
     private final CommentRepository commentRepository;
 
-
     @Override
     public ItemDto createItem(Long userId, ItemDto itemDto) {
         userService.getUserById(userId);
         Item item = itemRepository.save(ItemMapper.INSTANCE.toItem(itemDto, userId));
+        log.info("Item with id #{} saved", item.getId());
         return ItemMapper.INSTANCE.toItemDto(item);
     }
 
@@ -44,6 +53,7 @@ public class ItemServiceImpl implements ItemService {
             itemDto.setLastBooking(getLastBooking(itemId));
         }
         itemDto.setComments(getCommentsByItemId(itemId));
+        log.info("Item with id #{} found", itemId);
         return itemDto;
     }
 
@@ -52,6 +62,7 @@ public class ItemServiceImpl implements ItemService {
         if (!isExistItem(itemId)) {
             throw new NoSuchElementException("Item with id #" + itemId + " didn't found!");
         }
+        log.info("Item with id #{} found", itemId);
         return itemRepository.getById(itemId);
     }
 
@@ -79,7 +90,7 @@ public class ItemServiceImpl implements ItemService {
         }
         item.setOwner(updatedItem.getOwner());
         item.setRequest(updatedItem.getRequest());
-
+        log.info("Item with id #{} updated", item.getId());
         return ItemMapper.INSTANCE.toItemDto(itemRepository.save(item));
     }
 
@@ -108,6 +119,7 @@ public class ItemServiceImpl implements ItemService {
                 itemDto.setComments(getCommentsByItemId(itemId));
                 collection.add(itemDto);
             }
+            log.info("Users list found, users quantity is #{}", collection.size());
             return collection;
         }
     }
@@ -118,7 +130,7 @@ public class ItemServiceImpl implements ItemService {
         if (text.isEmpty()) {
             return Collections.emptyList();
         }
-
+        log.info("List of items, containing text -{}- got", text);
         return ItemMapper.INSTANCE.toItemDtos(itemRepository.searchItems(text));
     }
 
@@ -127,23 +139,26 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.existsById(itemId);
     }
 
-
     public ItemBookingDto getLastBooking(Long itemId) {
-        List<Booking> bookings = bookingRepository.findBookingByItem_IdAndEndIsBeforeOrderByEndDesc(itemId, LocalDateTime.now());
+        LocalDateTime currentTime = LocalDateTime.now();
+        List<Booking> bookings = bookingRepository.findBookingByItem_IdAndEndIsBeforeOrderByEndDesc(itemId,currentTime);
         if (bookings.isEmpty()) {
             return null;
         } else {
             Booking booking = bookings.get(0);
+            log.info("Last booking for item id #{} found", itemId);
             return new ItemBookingDto(booking.getId(), booking.getBooker().getId());
         }
     }
 
     public ItemBookingDto getNextBooking(Long itemId) {
-        List<Booking> bookings = bookingRepository.findBookingByItem_IdAndStartIsAfterOrderByStart(itemId, LocalDateTime.now());
+        LocalDateTime currentTime = LocalDateTime.now();
+        List<Booking> bookings = bookingRepository.findBookingByItem_IdAndStartIsAfterOrderByStart(itemId,currentTime);
         if (bookings.isEmpty()) {
             return null;
         } else {
             Booking booking = bookings.get(0);
+            log.info("Next booking for item id #{} found", itemId);
             return new ItemBookingDto(booking.getId(), booking.getBooker().getId());
         }
     }
@@ -160,6 +175,7 @@ public class ItemServiceImpl implements ItemService {
         Comment comment = CommentMapper.INSTANCE.toComment(commentDto);
         comment = commentRepository.save(comment);
         comment.getAuthor().setName(userService.getUserById(authorId).getName());
+        log.info("Comment for Item id #{} created", comment.getItem());
         return CommentMapper.INSTANCE.toCommentDto(comment);
     }
 
