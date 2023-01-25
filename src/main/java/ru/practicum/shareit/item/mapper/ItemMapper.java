@@ -23,4 +23,4 @@ public interface ItemMapper {
     Item toItem(ItemDto itemDto, Long userId);
 
     Collection<ItemDto> toItemDtos(Collection<Item> items);
-    }
+}

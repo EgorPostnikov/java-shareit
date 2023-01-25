@@ -1,21 +1,26 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.controller.State;
-import ru.practicum.shareit.booking.dto.*;
+import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingShort;
+import ru.practicum.shareit.booking.dto.State;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.mapper.BookingMapperImp;
 import ru.practicum.shareit.booking.model.BookedItem;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.storage.BookingRepository;
+import ru.practicum.shareit.exception.BadRequestException;
+import ru.practicum.shareit.exception.InvalidAccessException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.item.service.ItemServiceImpl;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -24,6 +29,7 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 
 public class BookingServiceImpl implements BookingService {
+    private static final Logger log = LoggerFactory.getLogger(ItemServiceImpl.class);
 
     private final BookingRepository bookingRepository;
     private final UserService userService;
@@ -31,42 +37,35 @@ public class BookingServiceImpl implements BookingService {
     private final BookingMapperImp bookingMapperImp;
 
     @Override
-    public BookingDto createBooking(Long userId, BookingShort bookingShort) {
+    public BookingDto createBooking(Long userId, BookingShort bookingShort) throws BadRequestException {
         Item item = itemService.getItem(bookingShort.getItemId());
 
         if (!userService.isExistUser(userId)) {
-            throw new NoSuchElementException("  User id did not found");
-        }
-
-        if (!userService.isExistUser(userId)) {
-            throw new NoSuchElementException("  User id did not found");
+            throw new NoSuchElementException("User id did not found");
         }
         if (!item.getAvailable()) {
-            throw new EntityNotFoundException("  Item not available for booking!");
+            throw new BadRequestException("Item not available for booking!");
         }
         if (bookingShort.getEnd().isBefore(bookingShort.getStart())) {
-            throw new EntityNotFoundException("  Booking end time is before start time!");
+            throw new BadRequestException("Booking end time is before start time!");
         }
         if (bookingShort.getEnd().isBefore(LocalDateTime.now())
                 || (bookingShort.getStart().isBefore(LocalDateTime.now()))) {
-            throw new EntityNotFoundException("  Time in the past!");
+            throw new BadRequestException("Time in the past!");
         }
-
         if (itemService.getOwnerOfItem(bookingShort.getItemId()) == userId) {
             throw new NoSuchElementException("Id's not correct!");
         }
         Booking booking = bookingMapperImp.toBooking(bookingShort);
         booking.getBooker().setId(userId);
         booking.getItem().setName(item.getName());
-        Booking booking2 = bookingRepository.save(booking);
-        BookingDto bookingDto1 = BookingMapper.INSTANCE.toBookingDto(booking2);
-
-        return bookingDto1;
+        booking = bookingRepository.save(booking);
+        log.info("Booking with id #{} saved", booking.getId());
+        return BookingMapper.INSTANCE.toBookingDto(booking);
     }
 
     @Override
-    @Transactional
-    public BookingDto updateBooking(Long bookingId, Long userId, Boolean approved) {
+    public BookingDto updateBooking(Long bookingId, Long userId, Boolean approved) throws InvalidAccessException {
 
         Booking booking = bookingRepository.getById(bookingId);
         BookedItem bookedItem = booking.getItem();
@@ -76,7 +75,7 @@ public class BookingServiceImpl implements BookingService {
             throw new EntityNotFoundException("Status is already set");
         }
         if (item.getOwner() != userId) {
-            throw new NoSuchElementException("User id did not found");
+            throw new InvalidAccessException("User have not roots!");
         }
         if (approved) {
             booking.setStatus(Status.APPROVED);
@@ -84,19 +83,21 @@ public class BookingServiceImpl implements BookingService {
             booking.setStatus(Status.REJECTED);
         }
         Booking bookingGot = bookingRepository.save(booking);
+        log.info("Booking with id #{} updated", bookingGot.getId());
         return BookingMapper.INSTANCE.toBookingDto(bookingGot);
     }
 
     @Override
-    public BookingDto getBookingById(Long bookingId, Long userId) {
+    public BookingDto getBookingById(Long bookingId, Long userId) throws InvalidAccessException {
         if (!isExistBooking(bookingId)) {
             throw new NoSuchElementException("Booking with id #" + bookingId + " didn't found!");
         }
         Booking booking = bookingRepository.getById(bookingId);
         Item item = itemService.getItem(booking.getItem().getId());
         if ((booking.getBooker().getId() != userId) && (item.getOwner() != userId)) {
-            throw new NoSuchElementException("  User id did not found");
+            throw new InvalidAccessException("User have not roots!");
         }
+        log.info("Booking with id #{} found", booking.getId());
         return BookingMapper.INSTANCE.toBookingDto(booking);
     }
 
@@ -121,15 +122,16 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findBookingByBooker_IdAndEndBeforeOrderByStartDesc(userId, currentTime);
                 break;
             case CURRENT:
-                bookings = bookingRepository.findBookingByBooker_IdAndEndAfterAndStartBeforeOrderByStartDesc(userId, currentTime, currentTime);
+                bookings = bookingRepository.findBookingByBooker_IdAndEndAfterAndStartBeforeOrderByStartDesc(userId,
+                        currentTime, currentTime);
                 break;
             case FUTURE:
                 bookings = bookingRepository.findBookingByBooker_IdAndEndAfterOrderByStartDesc(userId, currentTime);
                 break;
         }
+        log.info("Bookings list of user got, bookings qty is #{}", bookings.size());
         return BookingMapper.INSTANCE.toBookingDtos(bookings);
     }
-
 
     @Override
     public Collection<BookingDto> getBookingsOfUsersItems(Long userId, State state) {
@@ -152,12 +154,14 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findBookingByItem_OwnerAndEndBeforeOrderByStartDesc(userId, currentTime);
                 break;
             case CURRENT:
-                bookings = bookingRepository.findBookingByItem_OwnerAndEndAfterAndStartBeforeOrderByStartDesc(userId, currentTime, currentTime);
+                bookings = bookingRepository.findBookingByItem_OwnerAndEndAfterAndStartBeforeOrderByStartDesc(userId,
+                        currentTime, currentTime);
                 break;
             case FUTURE:
                 bookings = bookingRepository.findBookingByItem_OwnerAndEndAfterOrderByStartDesc(userId, currentTime);
                 break;
         }
+        log.info("Bookings list of users items got, bookings qty is #{}", bookings.size());
         return BookingMapper.INSTANCE.toBookingDtos(bookings);
     }
 
@@ -165,23 +169,3 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.existsById(bookingId);
     }
 }
-
-        /*Item item = itemService.getItem(bookingShort.getItemId());
-
-        if (!userService.isExistUser(userId)){
-            throw new NoSuchElementException("  User id did not found");
-        }
-        if (!item.getAvailable()){
-            throw new EntityNotFoundException("  Item not available for booking!");
-        }
-        if (bookingShort.getEnd().isBefore(bookingShort.getStart())) {
-            throw new EntityNotFoundException("  Booking end time is before start time!");
-        }
-        if (bookingShort.getEnd().isBefore(LocalDateTime.now())
-                ||(bookingShort.getStart().isBefore(LocalDateTime.now()))){
-            throw new EntityNotFoundException("  Time in the past!");
-        }
-
-        if (itemService.getOwnerOfItem(bookingShort.getItemId())==userId){
-            throw new EntityNotFoundException("Id's not correct!");
-        }*/

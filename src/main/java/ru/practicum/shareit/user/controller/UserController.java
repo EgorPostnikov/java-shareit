@@ -62,5 +62,4 @@ public class UserController {
         return new Response(exception.getMessage());
     }
 
-
 }

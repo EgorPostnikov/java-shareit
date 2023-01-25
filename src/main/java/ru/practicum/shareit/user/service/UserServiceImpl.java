@@ -8,7 +8,6 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
-import ru.practicum.shareit.user.validation.ValidationException;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -47,9 +46,6 @@ public class UserServiceImpl implements UserService {
         }
         if (user.getEmail() == null) {
             user.setEmail(updatedUser.getEmail());
-        }
-        if ((!user.getEmail().equals(updatedUser.getEmail())) && isExistEmail(user.getEmail())) {
-            throw new ValidationException("Email already in use.");
         }
         userRepository.save(user);
         log.info("User with id #{} updated", userId);

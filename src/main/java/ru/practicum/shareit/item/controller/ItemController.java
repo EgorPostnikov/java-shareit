@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.InvalidAccessException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithComments;
@@ -41,7 +42,7 @@ public class ItemController {
     @ResponseStatus(HttpStatus.OK)
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                               @PathVariable long itemId,
-                              @RequestBody ItemDto item) {
+                              @RequestBody ItemDto item) throws InvalidAccessException {
         item.setId(itemId);
         return itemService.updateItem(userId, item);
     }
@@ -84,6 +85,12 @@ public class ItemController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EntityNotFoundException.class)
     public Response handleException(EntityNotFoundException exception) {
+        return new Response(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(InvalidAccessException.class)
+    public Response handleException(InvalidAccessException exception) {
         return new Response(exception.getMessage());
     }
 

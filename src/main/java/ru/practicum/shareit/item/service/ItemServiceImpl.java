@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
+import ru.practicum.shareit.exception.InvalidAccessException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -47,7 +48,7 @@ public class ItemServiceImpl implements ItemService {
         }
         Item item = itemRepository.getById(itemId);
         ItemDtoWithComments itemDto = ItemMapper.INSTANCE.toItemDtoWithComments(item);
-        Boolean isOwner = (item.getOwner() == userId);
+        boolean isOwner = (item.getOwner().equals(userId));
         if (isOwner) {
             itemDto.setNextBooking(getNextBooking(itemId));
             itemDto.setLastBooking(getLastBooking(itemId));
@@ -72,11 +73,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto updateItem(long userId, ItemDto itemDto) {
+    public ItemDto updateItem(long userId, ItemDto itemDto) throws InvalidAccessException {
         Item item = ItemMapper.INSTANCE.toItem(itemDto, userId);
         Item updatedItem = itemRepository.getById(itemDto.getId());
         if (!(updatedItem.getOwner() == userId)) {
-            throw new NoSuchElementException("Access rights are not defined");
+            throw new InvalidAccessException("Access rights are not defined");
         }
         userService.getUserById(userId);
         if (item.getName() == null) {
@@ -110,7 +111,7 @@ public class ItemServiceImpl implements ItemService {
             while (var3.hasNext()) {
                 Item item = (Item) var3.next();
                 Long itemId = item.getId();
-                Boolean isOwner = (item.getOwner() == userId);
+                boolean isOwner = (item.getOwner() == userId);
                 ItemDtoWithComments itemDto = ItemMapper.INSTANCE.toItemDtoWithComments(item);
                 if (isOwner) {
                     itemDto.setNextBooking(getNextBooking(itemId));
@@ -141,7 +142,7 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemBookingDto getLastBooking(Long itemId) {
         LocalDateTime currentTime = LocalDateTime.now();
-        List<Booking> bookings = bookingRepository.findBookingByItem_IdAndEndIsBeforeOrderByEndDesc(itemId,currentTime);
+        List<Booking> bookings = bookingRepository.findBookingByItem_IdAndEndIsBeforeOrderByEndDesc(itemId, currentTime);
         if (bookings.isEmpty()) {
             return null;
         } else {
@@ -153,7 +154,7 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemBookingDto getNextBooking(Long itemId) {
         LocalDateTime currentTime = LocalDateTime.now();
-        List<Booking> bookings = bookingRepository.findBookingByItem_IdAndStartIsAfterOrderByStart(itemId,currentTime);
+        List<Booking> bookings = bookingRepository.findBookingByItem_IdAndStartIsAfterOrderByStart(itemId, currentTime);
         if (bookings.isEmpty()) {
             return null;
         } else {

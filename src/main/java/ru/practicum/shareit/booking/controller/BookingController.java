@@ -5,8 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShort;
+import ru.practicum.shareit.booking.dto.State;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
+import ru.practicum.shareit.exception.BadRequestException;
+import ru.practicum.shareit.exception.InvalidAccessException;
 import ru.practicum.shareit.response.Response;
 
 import javax.persistence.EntityNotFoundException;
@@ -26,7 +29,7 @@ public class BookingController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                                    @RequestBody BookingShort bookingShort) {
+                                    @RequestBody BookingShort bookingShort) throws BadRequestException {
         return bookingService.createBooking(userId, bookingShort);
     }
 
@@ -34,14 +37,14 @@ public class BookingController {
     @ResponseStatus(HttpStatus.OK)
     public BookingDto updateBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
                                     @PathVariable long bookingId,
-                                    @RequestParam Boolean approved) {
+                                    @RequestParam Boolean approved) throws InvalidAccessException {
         return bookingService.updateBooking(bookingId, userId, approved);
     }
 
     @GetMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.OK)
     public BookingDto getBookingById(@PathVariable long bookingId,
-                                     @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                     @RequestHeader("X-Sharer-User-Id") Long userId) throws InvalidAccessException {
         return bookingService.getBookingById(bookingId, userId);
     }
 
@@ -77,5 +80,16 @@ public class BookingController {
         return Map.of("error", "Unknown state: UNSUPPORTED_STATUS");
     }
 
-//"Unknown state: UNSUPPORTED_STATUS"
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(InvalidAccessException.class)
+    public Response handleException(InvalidAccessException exception) {
+        return new Response(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    public Response handleException(BadRequestException exception) {
+        return new Response(exception.getMessage());
+    }
+
 }

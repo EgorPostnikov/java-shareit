@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.service;
 
+import ru.practicum.shareit.exception.InvalidAccessException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithComments;
@@ -17,7 +18,7 @@ public interface ItemService {
 
     Long getOwnerOfItem(long itemId);
 
-    ItemDto updateItem(long userId, ItemDto item);
+    ItemDto updateItem(long userId, ItemDto item) throws InvalidAccessException;
 
     void deleteItem(long itemId);
 
