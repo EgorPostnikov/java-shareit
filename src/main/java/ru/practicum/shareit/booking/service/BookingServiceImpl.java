@@ -161,7 +161,7 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findBookingByItem_OwnerAndEndAfterOrderByStartDesc(userId, currentTime);
                 break;
         }
-        log.info("Bookings list of users items got, bookings qty is #{}", bookings.size());
+        log.info("Bookings list of users items got, bookings qty are #{}", bookings.size());
         return BookingMapper.INSTANCE.toBookingDtos(bookings);
     }
 
