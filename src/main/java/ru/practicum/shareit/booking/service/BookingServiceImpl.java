@@ -53,7 +53,7 @@ public class BookingServiceImpl implements BookingService {
                 || (bookingShort.getStart().isBefore(LocalDateTime.now()))) {
             throw new BadRequestException("Time in the past!");
         }
-        if (itemService.getOwnerOfItem(bookingShort.getItemId()) == userId) {
+        if (itemService.getOwnerOfItem(bookingShort.getItemId()).equals(userId)) {
             throw new NoSuchElementException("Id's not correct!");
         }
         Booking booking = bookingMapperImp.toBooking(bookingShort);
@@ -74,7 +74,7 @@ public class BookingServiceImpl implements BookingService {
         if (booking.getStatus() != Status.WAITING) {
             throw new EntityNotFoundException("Status is already set");
         }
-        if (item.getOwner() != userId) {
+        if (!item.getOwner().equals(userId)) {
             throw new InvalidAccessException("User have not roots!");
         }
         if (approved) {
@@ -94,7 +94,7 @@ public class BookingServiceImpl implements BookingService {
         }
         Booking booking = bookingRepository.getById(bookingId);
         Item item = itemService.getItem(booking.getItem().getId());
-        if ((booking.getBooker().getId() != userId) && (item.getOwner() != userId)) {
+        if ((!booking.getBooker().getId().equals(userId)) && (!item.getOwner().equals(userId))) {
             throw new InvalidAccessException("User have not roots!");
         }
         log.info("Booking with id #{} found", booking.getId());
