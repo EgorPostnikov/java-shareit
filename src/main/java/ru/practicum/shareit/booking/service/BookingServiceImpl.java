@@ -6,11 +6,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShort;
-import ru.practicum.shareit.booking.dto.State;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.mapper.BookingMapperImp;
 import ru.practicum.shareit.booking.model.BookedItem;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.BadRequestException;
@@ -24,6 +24,7 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -67,7 +68,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto updateBooking(Long bookingId, Long userId, Boolean approved) throws InvalidAccessException {
 
-        Booking booking = bookingRepository.getById(bookingId);
+        Booking booking = getById(bookingId);
         BookedItem bookedItem = booking.getItem();
         Long itemId = bookedItem.getId();
         Item item = itemService.getItem(itemId);
@@ -92,7 +93,7 @@ public class BookingServiceImpl implements BookingService {
         if (!isExistBooking(bookingId)) {
             throw new NoSuchElementException("Booking with id #" + bookingId + " didn't found!");
         }
-        Booking booking = bookingRepository.getById(bookingId);
+        Booking booking = getById(bookingId);
         Item item = itemService.getItem(booking.getItem().getId());
         if ((!booking.getBooker().getId().equals(userId)) && (!item.getOwner().equals(userId))) {
             throw new InvalidAccessException("User have not roots!");
@@ -168,4 +169,13 @@ public class BookingServiceImpl implements BookingService {
     public boolean isExistBooking(Long bookingId) {
         return bookingRepository.existsById(bookingId);
     }
+
+    public Booking getById(Long bookingId) {
+        Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
+        if (bookingOptional.isEmpty()) {
+            throw new NoSuchElementException("Data not found!");
+        }
+        return bookingOptional.get();
+    }
+
 }

@@ -46,7 +46,7 @@ public class ItemServiceImpl implements ItemService {
         if (!isExistItem(itemId)) {
             throw new NoSuchElementException("Item with id #" + itemId + " didn't found!");
         }
-        Item item = itemRepository.getById(itemId);
+        Item item = findById(itemId);
         ItemDtoWithComments itemDto = ItemMapper.INSTANCE.toItemDtoWithComments(item);
         boolean isOwner = (item.getOwner().equals(userId));
         if (isOwner) {
@@ -64,18 +64,18 @@ public class ItemServiceImpl implements ItemService {
             throw new NoSuchElementException("Item with id #" + itemId + " didn't found!");
         }
         log.info("Item with id #{} found", itemId);
-        return itemRepository.getById(itemId);
+        return findById(itemId);
     }
 
     @Override
     public Long getOwnerOfItem(long itemId) {
-        return itemRepository.getById(itemId).getOwner();
+        return findById(itemId).getOwner();
     }
 
     @Override
     public ItemDto updateItem(long userId, ItemDto itemDto) throws InvalidAccessException {
         Item item = ItemMapper.INSTANCE.toItem(itemDto, userId);
-        Item updatedItem = itemRepository.getById(itemDto.getId());
+        Item updatedItem = findById(itemDto.getId());
         if (!(updatedItem.getOwner() == userId)) {
             throw new InvalidAccessException("Access rights are not defined");
         }
@@ -183,4 +183,13 @@ public class ItemServiceImpl implements ItemService {
     public Collection<CommentDto> getCommentsByItemId(Long itemId) {
         return CommentMapper.INSTANCE.toCommentDtos(commentRepository.getCommentsByItemEquals(itemId));
     }
+
+    public Item findById(Long itemId) {
+        Optional<Item> itemOptional = itemRepository.findById(itemId);
+        if (itemOptional.isEmpty()) {
+            throw new NoSuchElementException("Data not found!");
+        }
+        return itemOptional.get();
+    }
+
 }

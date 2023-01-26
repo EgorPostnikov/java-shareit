@@ -11,6 +11,7 @@ import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -33,13 +34,13 @@ public class UserServiceImpl implements UserService {
             throw new NoSuchElementException("User with id #" + userId + " didn't found!");
         }
         log.info("User with id #{} found", userId);
-        return UserMapper.INSTANCE.toUserDto(userRepository.getById(userId));
+        return UserMapper.INSTANCE.toUserDto(findById(userId));
     }
 
     @Override
     public UserDto updateUser(long userId, UserDto userDto) {
         User user = UserMapper.INSTANCE.toUser(userDto);
-        User updatedUser = userRepository.getById(userId);
+        User updatedUser = findById(userId);
         user.setId(userId);
         if (user.getName() == null) {
             user.setName(updatedUser.getName());
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.save(user);
         log.info("User with id #{} updated", userId);
-        return UserMapper.INSTANCE.toUserDto(userRepository.getById(userId));
+        return UserMapper.INSTANCE.toUserDto(findById(userId));
     }
 
     @Override
@@ -74,5 +75,13 @@ public class UserServiceImpl implements UserService {
     public boolean isExistUser(Long userId) {
         return userRepository.existsById(userId);
 
+    }
+
+    public User findById(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new NoSuchElementException("Data not found!");
+        }
+        return userOptional.get();
     }
 }
