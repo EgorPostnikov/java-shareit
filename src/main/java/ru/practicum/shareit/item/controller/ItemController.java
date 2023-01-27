@@ -3,11 +3,15 @@ package ru.practicum.shareit.item.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.InvalidAccessException;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoWithComments;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.response.Response;
 import ru.practicum.shareit.user.validation.Create;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
@@ -29,18 +33,20 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDto getItemById(@PathVariable long itemId) {
-        return itemService.getItemById(itemId);
+    public ItemDtoWithComments getItemById(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                           @PathVariable long itemId) {
+        return itemService.getItemById(itemId, userId);
     }
 
     @PatchMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                               @PathVariable long itemId,
-                              @RequestBody ItemDto item) {
+                              @RequestBody ItemDto item) throws InvalidAccessException {
         item.setId(itemId);
         return itemService.updateItem(userId, item);
     }
+
 
     @DeleteMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
@@ -50,7 +56,7 @@ public class ItemController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<ItemDto> getItems(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public Collection<ItemDtoWithComments> getItems(@RequestHeader("X-Sharer-User-Id") long userId) {
         return itemService.getItems(userId);
     }
 
@@ -60,9 +66,31 @@ public class ItemController {
         return itemService.searchItems(text);
     }
 
+    @PostMapping("/{itemId}/comment")
+    @ResponseStatus(HttpStatus.OK)
+    public CommentDto createComment(@PathVariable long itemId,
+                                    @RequestHeader("X-Sharer-User-Id") long userId,
+                                    @RequestBody CommentDto commentDto) {
+        commentDto.setItem(itemId);
+        commentDto.setAuthorId(userId);
+        return itemService.createComment(commentDto);
+    }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
     public Response handleException(NoSuchElementException exception) {
+        return new Response(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public Response handleException(EntityNotFoundException exception) {
+        return new Response(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(InvalidAccessException.class)
+    public Response handleException(InvalidAccessException exception) {
         return new Response(exception.getMessage());
     }
 

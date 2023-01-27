@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.user.validation.Create;
 import ru.practicum.shareit.user.validation.Update;
-import ru.practicum.shareit.user.validation.UsedEmailValidation;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -18,7 +17,5 @@ public class UserDto {
     private String name;
     @NotNull(message = "Email is required.", groups = {Create.class})
     @Email(message = "Invalid email.", groups = {Create.class, Update.class})
-    @UsedEmailValidation(groups = {Create.class})
     private String email;
-
 }

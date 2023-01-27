@@ -7,11 +7,12 @@ import ru.practicum.shareit.user.validation.Create;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 
 @Setter
 @Getter
 @AllArgsConstructor
-public class ItemDto {
+public class ItemDtoWithComments {
     private Long id;
     @NotNull(message = "Name is required.", groups = {Create.class})
     @NotBlank(message = "Name is required.", groups = {Create.class})
@@ -24,5 +25,7 @@ public class ItemDto {
     private Long requestId;
     private ItemBookingDto lastBooking;
     private ItemBookingDto nextBooking;
+    private Collection<CommentDto> comments;
 
 }
+
