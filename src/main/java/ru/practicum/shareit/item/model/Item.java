@@ -24,7 +24,6 @@ public class Item {
     @Column(name = "owner_id")
     private Long owner;
     @Column(name = "request_id")
-    @Transient
-    private ItemRequest request;
+    private Long requestId;
 
 }

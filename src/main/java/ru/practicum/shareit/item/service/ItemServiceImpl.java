@@ -90,7 +90,7 @@ public class ItemServiceImpl implements ItemService {
             item.setAvailable(updatedItem.getAvailable());
         }
         item.setOwner(updatedItem.getOwner());
-        item.setRequest(updatedItem.getRequest());
+        item.setRequestId(updatedItem.getRequestId());
         log.info("Item with id #{} updated", item.getId());
         return ItemMapper.INSTANCE.toItemDto(itemRepository.save(item));
     }

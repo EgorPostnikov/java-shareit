@@ -1,9 +1,11 @@
 package ru.practicum.shareit.request;
 
 import lombok.*;
+import ru.practicum.shareit.item.model.Item;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Getter
 @Setter
@@ -20,4 +22,8 @@ public class ItemRequest {
     @Column(name="requestor_id")
     private Long requestor;
     private LocalDateTime created=LocalDateTime.now();
+    @Transient
+    /*@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id")*/
+    private Collection <Item> items;
 }
