@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.service;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShort;
@@ -103,7 +104,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingDto> getBookingsOfUser(Long userId, State state) {
+    public Collection<BookingDto> getBookingsOfUser(Long userId, State state,PageRequest pageRequest) {
         LocalDateTime currentTime = LocalDateTime.now();
         if (!userService.isExistUser(userId)) {
             throw new NoSuchElementException("User with id #" + userId + " didn't found!");
@@ -111,23 +112,29 @@ public class BookingServiceImpl implements BookingService {
         Collection<Booking> bookings = null;
         switch (state) {
             case WAITING:
-                bookings = bookingRepository.findBookingByBooker_IdAndStatusOrderByStartDesc(userId, Status.WAITING);
+                bookings = bookingRepository.
+                        findBookingByBooker_IdAndStatusOrderByStartDesc(userId, Status.WAITING,pageRequest);
                 break;
             case REJECTED:
-                bookings = bookingRepository.findBookingByBooker_IdAndStatusOrderByStartDesc(userId, Status.REJECTED);
+                bookings = bookingRepository.
+                        findBookingByBooker_IdAndStatusOrderByStartDesc(userId, Status.REJECTED,pageRequest);
                 break;
             case ALL:
-                bookings = bookingRepository.findBookingByBooker_IdOrderByStartDesc(userId);
+                bookings = bookingRepository.
+                        findBookingByBooker_IdOrderByStartDesc(userId,pageRequest);
                 break;
             case PAST:
-                bookings = bookingRepository.findBookingByBooker_IdAndEndBeforeOrderByStartDesc(userId, currentTime);
+                bookings = bookingRepository.
+                        findBookingByBooker_IdAndEndBeforeOrderByStartDesc(userId, currentTime,pageRequest);
                 break;
             case CURRENT:
-                bookings = bookingRepository.findBookingByBooker_IdAndEndAfterAndStartBeforeOrderByStartDesc(userId,
-                        currentTime, currentTime);
+                bookings = bookingRepository.
+                        findBookingByBooker_IdAndEndAfterAndStartBeforeOrderByStartDesc(userId,
+                                currentTime, currentTime,pageRequest);
                 break;
             case FUTURE:
-                bookings = bookingRepository.findBookingByBooker_IdAndEndAfterOrderByStartDesc(userId, currentTime);
+                bookings = bookingRepository.
+                        findBookingByBooker_IdAndEndAfterOrderByStartDesc(userId, currentTime,pageRequest);
                 break;
         }
         log.info("Bookings list of user got, bookings qty is #{}", bookings.size());
@@ -135,7 +142,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingDto> getBookingsOfUsersItems(Long userId, State state) {
+    public Collection<BookingDto> getBookingsOfUsersItems(Long userId, State state, PageRequest pageRequest) {
         LocalDateTime currentTime = LocalDateTime.now();
         if (!userService.isExistUser(userId)) {
             throw new NoSuchElementException("User with id #" + userId + " didn't found!");
@@ -143,23 +150,29 @@ public class BookingServiceImpl implements BookingService {
         Collection<Booking> bookings = null;
         switch (state) {
             case WAITING:
-                bookings = bookingRepository.findBookingByItem_OwnerAndStatusOrderByStartDesc(userId, Status.WAITING);
+                bookings = bookingRepository.
+                        findBookingByItem_OwnerAndStatusOrderByStartDesc(userId, Status.WAITING,pageRequest);
                 break;
             case REJECTED:
-                bookings = bookingRepository.findBookingByItem_OwnerAndStatusOrderByStartDesc(userId, Status.REJECTED);
+                bookings = bookingRepository.
+                        findBookingByItem_OwnerAndStatusOrderByStartDesc(userId, Status.REJECTED,pageRequest);
                 break;
             case ALL:
-                bookings = bookingRepository.findBookingByItem_OwnerOrderByStartDesc(userId);
+                bookings = bookingRepository.
+                        findBookingByItem_OwnerOrderByStartDesc(userId,pageRequest);
                 break;
             case PAST:
-                bookings = bookingRepository.findBookingByItem_OwnerAndEndBeforeOrderByStartDesc(userId, currentTime);
+                bookings = bookingRepository.
+                        findBookingByItem_OwnerAndEndBeforeOrderByStartDesc(userId, currentTime,pageRequest);
                 break;
             case CURRENT:
-                bookings = bookingRepository.findBookingByItem_OwnerAndEndAfterAndStartBeforeOrderByStartDesc(userId,
-                        currentTime, currentTime);
+                bookings = bookingRepository.
+                        findBookingByItem_OwnerAndEndAfterAndStartBeforeOrderByStartDesc(userId,
+                        currentTime, currentTime,pageRequest);
                 break;
             case FUTURE:
-                bookings = bookingRepository.findBookingByItem_OwnerAndEndAfterOrderByStartDesc(userId, currentTime);
+                bookings = bookingRepository.
+                        findBookingByItem_OwnerAndEndAfterOrderByStartDesc(userId, currentTime,pageRequest);
                 break;
         }
         log.info("Bookings list of users items got, bookings qty are #{}", bookings.size());

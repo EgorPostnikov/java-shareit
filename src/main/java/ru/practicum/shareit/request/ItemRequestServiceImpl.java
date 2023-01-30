@@ -3,11 +3,13 @@ package ru.practicum.shareit.request;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.service.UserService;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
+import java.util.NoSuchElementException;
+
 @Service
 @AllArgsConstructor
 public class ItemRequestServiceImpl implements ItemRequestService{
@@ -19,6 +21,9 @@ public class ItemRequestServiceImpl implements ItemRequestService{
     @Override
     public ItemRequestDto createItemRequest(long userId, ItemRequestDto itemRequestDto) {
         ItemRequest request = ItemRequestMapper.INSTANCE.toItemRequest(itemRequestDto);
+        if (!userService.isExistUser(userId)){
+            throw new NoSuchElementException("User id did not found!");
+        }
         request.setRequestor(userId);
         request=itemRequestRepository.save(request);
         log.info("ItemRequest with id #{} saved", request.getId());
@@ -26,23 +31,23 @@ public class ItemRequestServiceImpl implements ItemRequestService{
     }
 
     @Override
-    public Collection<ItemRequestDto> getItemRequests(long userId) {
+    public Collection<ItemRequestWithResponseDto> getItemRequests(long userId) {
         userService.getUserById(userId);
         Collection<ItemRequest> requests = itemRequestRepository.
                 findItemRequestsByRequestorOrderByCreatedDesc(userId);
-        return ItemRequestMapper.INSTANCE.toItemRequestDtos(requests);
+        return ItemRequestMapper.INSTANCE.toItemRequestWithResponseDtos(requests);
     }
 
     @Override
-    public Collection<ItemRequestDto> getAnotherItemRequests(long userId, Integer from, Integer size) {
+    public Collection<ItemRequestDto> getAnotherItemRequests(long userId, PageRequest sortingForRequest) {
         userService.getUserById(userId);
         Collection<ItemRequest> requests = itemRequestRepository.
-                findItemRequestsByRequestorNotOrderByCreatedDesc(userId);
+                findItemRequestsByRequestorNotOrderByCreatedDesc(userId,sortingForRequest);
         return ItemRequestMapper.INSTANCE.toItemRequestDtos(requests);
     }
     @Override
-    public ItemRequestDto getItemRequestById(long itemRequestId, Long userId) {
+    public ItemRequestWithResponseDto getItemRequestById(long itemRequestId, Long userId) {
         ItemRequest request = itemRequestRepository.findById(itemRequestId).get();
-        return  ItemRequestMapper.INSTANCE.toItemRequestDto(request);
+        return  ItemRequestMapper.INSTANCE.toItemRequestWithResponseDto(request);
     }
 }

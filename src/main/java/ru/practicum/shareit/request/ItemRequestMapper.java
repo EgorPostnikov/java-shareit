@@ -14,8 +14,10 @@ public interface ItemRequestMapper {
     ItemRequestMapper INSTANCE = Mappers.getMapper(ItemRequestMapper.class);
 
     ItemRequestDto toItemRequestDto(ItemRequest itemRequest);
+    ItemRequestWithResponseDto toItemRequestWithResponseDto(ItemRequest itemRequest);
     @Mapping(target = "description", source = "description")
     ItemRequest toItemRequest(ItemRequestDto itemRequestDto);
 
     Collection<ItemRequestDto> toItemRequestDtos(Collection<ItemRequest> itemRequests);
+    Collection<ItemRequestWithResponseDto> toItemRequestWithResponseDtos(Collection<ItemRequest> itemRequests);
 }

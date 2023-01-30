@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.service;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
@@ -101,8 +102,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDtoWithComments> getItems(long userId) {
-        Collection<Item> items = itemRepository.getItems(userId);
+    public Collection<ItemDtoWithComments> getItems(long userId, PageRequest pageRequest) {
+        Collection<Item> items = itemRepository.getItemsByOwnerOrderById(userId,pageRequest);
         if (items == null) {
             return null;
         } else {

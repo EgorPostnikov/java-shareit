@@ -1,5 +1,8 @@
 package ru.practicum.shareit.request;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,20 +35,21 @@ public class ItemRequestController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<ItemRequestDto> getItemRequests(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public Collection<ItemRequestWithResponseDto> getItemRequests(@RequestHeader("X-Sharer-User-Id") long userId) {
         return itemRequestService.getItemRequests(userId);
     }
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public Collection<ItemRequestDto> getAnotherItemRequests(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                             @RequestParam Integer from,
-                                                             @RequestParam Integer size) {
-        return itemRequestService.getAnotherItemRequests(userId, from, size);
+                                                             @RequestParam (defaultValue = "0") Integer from,
+                                                             @RequestParam (defaultValue = "100") Integer size) {
+        PageRequest pageRequest = PageRequest.of(from, size, Sort.unsorted());
+        return itemRequestService.getAnotherItemRequests(userId, pageRequest);
     }
 
     @GetMapping("/{requestId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemRequestDto getItemRequestById(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ItemRequestWithResponseDto getItemRequestById(@RequestHeader("X-Sharer-User-Id") Long userId,
                                            @PathVariable long itemRequestId) {
         return itemRequestService.getItemRequestById(itemRequestId, userId);
     }
