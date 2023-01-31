@@ -14,7 +14,7 @@ public interface ItemMapper {
     ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
 
     ItemDto toItemDto(Item item);
-    
+
     ItemDtoWithComments toItemDtoWithComments(Item item);
 
     @Mapping(target = "owner", source = "userId")

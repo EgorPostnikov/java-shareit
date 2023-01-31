@@ -54,9 +54,9 @@ public class BookingController {
     @ResponseStatus(HttpStatus.OK)
     public Collection<BookingDto> getBookingsOfUser(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                     @RequestParam(defaultValue = "ALL") State state,
-                                                    @RequestParam (defaultValue = "1") Integer from,
-                                                    @RequestParam (defaultValue = "100") Integer size) {
-        PageRequest pageRequest = PageRequest.of(from-1, size, Sort.unsorted());
+                                                    @RequestParam(defaultValue = "1") Integer from,
+                                                    @RequestParam(defaultValue = "100") Integer size) {
+        PageRequest pageRequest = PageRequest.of(from - 1, size, Sort.unsorted());
         return bookingService.getBookingsOfUser(userId, state, pageRequest);
     }
 
@@ -64,10 +64,10 @@ public class BookingController {
     @ResponseStatus(HttpStatus.OK)
     public Collection<BookingDto> getBookingsOfUsersItems(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                           @RequestParam(defaultValue = "ALL") State state,
-                                                          @RequestParam (defaultValue = "0") Integer from,
-                                                          @RequestParam (defaultValue = "100") Integer size) {
+                                                          @RequestParam(defaultValue = "0") Integer from,
+                                                          @RequestParam(defaultValue = "100") Integer size) {
         PageRequest pageRequest = PageRequest.of(from, size, Sort.unsorted());
-        return bookingService.getBookingsOfUsersItems(userId, state,pageRequest);
+        return bookingService.getBookingsOfUsersItems(userId, state, pageRequest);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

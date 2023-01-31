@@ -1,11 +1,12 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.controller;
 
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.response.Response;
 import ru.practicum.shareit.validation.Create;
 import ru.practicum.shareit.validation.ValidationException;
@@ -26,30 +27,32 @@ public class ItemRequestController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ItemRequestDto createItemRequest(@RequestHeader("X-Sharer-User-Id") long userId,
-                              @Validated(Create.class) @RequestBody ItemRequestDto itemRequestDto) {
+                                            @Validated(Create.class) @RequestBody ItemRequestDto itemRequestDto) {
         return itemRequestService.createItemRequest(userId, itemRequestDto);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<ItemRequestWithResponseDto> getItemRequests(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public Collection<ItemRequestDto> getItemRequests(@RequestHeader("X-Sharer-User-Id") long userId) {
         return itemRequestService.getItemRequests(userId);
     }
+
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public Collection<ItemRequestDto> getAnotherItemRequests(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                             @RequestParam (defaultValue = "0") Integer from,
-                                                             @RequestParam (defaultValue = "100") Integer size) {
+                                                             @RequestParam(defaultValue = "0") Integer from,
+                                                             @RequestParam(defaultValue = "100") Integer size) {
         PageRequest pageRequest = PageRequest.of(from, size, Sort.unsorted());
         return itemRequestService.getAnotherItemRequests(userId, pageRequest);
     }
 
     @GetMapping("/{requestId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemRequestWithResponseDto getItemRequestById(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                           @PathVariable long requestId) {
+    public ItemRequestDto getItemRequestById(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                             @PathVariable long requestId) {
         return itemRequestService.getItemRequestById(requestId, userId);
     }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
     public Response handleException(NoSuchElementException exception) {

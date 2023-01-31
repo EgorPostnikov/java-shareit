@@ -103,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDtoWithComments> getItems(long userId, PageRequest pageRequest) {
-        Collection<Item> items = itemRepository.getItemsByOwnerOrderById(userId,pageRequest);
+        Collection<Item> items = itemRepository.getItemsByOwnerOrderById(userId, pageRequest);
         if (items == null) {
             return null;
         } else {

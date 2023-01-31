@@ -14,6 +14,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Collection<Item> searchItems(String text);
 
     //@Query(" select i from Item i where (i.owner) = ?1 ORDER BY i.id")
-    Collection<Item> getItemsByOwnerOrderById (long userId, PageRequest pageRequest);
+    Collection<Item> getItemsByOwnerOrderById(long userId, PageRequest pageRequest);
 
 }

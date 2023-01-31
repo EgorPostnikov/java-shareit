@@ -11,8 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "items", schema = "public")
 @ToString
-
-public class Item {
+public class ItemForRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,5 +23,4 @@ public class Item {
     private Long owner;
     @Column(name = "request_id")
     private Long requestId;
-
 }

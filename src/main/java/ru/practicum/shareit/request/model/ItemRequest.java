@@ -1,12 +1,10 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.model;
 
 import lombok.*;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.ItemForRequest;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,9 +20,9 @@ public class ItemRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
-    @Column(name="requestor_id")
+    @Column(name = "requestor_id")
     private Long requestor;
     private LocalDateTime created;
-    @OneToMany(mappedBy = "requestId",cascade = CascadeType.ALL)
-    private Set<Item> items = new HashSet<>();
+    @OneToMany(mappedBy = "requestId", cascade = CascadeType.ALL)
+    private Set<ItemForRequest> items = new HashSet<>();
 }
