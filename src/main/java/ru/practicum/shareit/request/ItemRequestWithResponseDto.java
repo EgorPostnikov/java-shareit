@@ -7,7 +7,7 @@ import lombok.Setter;
 import ru.practicum.shareit.item.model.Item;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -18,5 +18,5 @@ public class ItemRequestWithResponseDto {
         private String description;
         private Long requestor;
         private LocalDateTime created;
-        private Collection<Item> items;
+        private Set<Item> items;
 }

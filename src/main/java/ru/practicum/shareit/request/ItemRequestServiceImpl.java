@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.service.UserService;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
@@ -47,7 +48,14 @@ public class ItemRequestServiceImpl implements ItemRequestService{
     }
     @Override
     public ItemRequestWithResponseDto getItemRequestById(long itemRequestId, Long userId) {
+        if(!itemRequestRepository.existsById(itemRequestId)){
+            throw new NoSuchElementException("Request id did not found!");
+        }
+        if (!userService.isExistUser(userId)){
+            throw new NoSuchElementException("User id did not found!");
+        }
         ItemRequest request = itemRequestRepository.findById(itemRequestId).get();
+        System.out.println(request);
         return  ItemRequestMapper.INSTANCE.toItemRequestWithResponseDto(request);
     }
 }

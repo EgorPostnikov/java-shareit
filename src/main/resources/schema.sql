@@ -51,10 +51,10 @@ ALTER TABLE comments ADD FOREIGN KEY (item_id) REFERENCES items (id);
 ALTER TABLE comments ADD FOREIGN KEY (author_id) REFERENCES users (id);
 ALTER TABLE requests ADD FOREIGN KEY (requestor_id) REFERENCES users (id);
 
-DELETE FROM requests;
 DELETE FROM comments;
 DELETE FROM bookings;
 DELETE FROM items;
+DELETE FROM requests;
 DELETE FROM users;
 
 ALTER TABLE bookings ALTER COLUMN id RESTART WITH 1;

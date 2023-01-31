@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,8 +25,6 @@ public class ItemRequest {
     @Column(name="requestor_id")
     private Long requestor;
     private LocalDateTime created;
-    @Transient
-    /*@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id")*/
-    private Collection <Item> items;
+    @OneToMany(mappedBy = "requestId",cascade = CascadeType.ALL)
+    private Set<Item> items = new HashSet<>();
 }

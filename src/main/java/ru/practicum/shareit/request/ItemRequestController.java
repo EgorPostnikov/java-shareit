@@ -14,9 +14,6 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @RestController
 @RequestMapping(path = "/requests")
 public class ItemRequestController {
@@ -50,8 +47,8 @@ public class ItemRequestController {
     @GetMapping("/{requestId}")
     @ResponseStatus(HttpStatus.OK)
     public ItemRequestWithResponseDto getItemRequestById(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                           @PathVariable long itemRequestId) {
-        return itemRequestService.getItemRequestById(itemRequestId, userId);
+                                           @PathVariable long requestId) {
+        return itemRequestService.getItemRequestById(requestId, userId);
     }
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
