@@ -1,6 +1,8 @@
 package ru.practicum.shareit.request.service;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -16,10 +18,13 @@ import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
+@Setter
+
 public class ItemRequestServiceImpl implements ItemRequestService {
     private static final Logger log = LoggerFactory.getLogger(ItemRequestServiceImpl.class);
-    private final ItemRequestRepository itemRequestRepository;
-    private final UserService userService;
+    private ItemRequestRepository itemRequestRepository;
+    private UserService userService;
 
 
     @Override

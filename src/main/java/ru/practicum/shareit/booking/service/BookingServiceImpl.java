@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -28,15 +30,17 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 
 public class BookingServiceImpl implements BookingService {
     private static final Logger log = LoggerFactory.getLogger(ItemServiceImpl.class);
 
-    private final BookingRepository bookingRepository;
-    private final UserService userService;
-    private final ItemService itemService;
-    private final BookingMapperImp bookingMapperImp;
+    private BookingRepository bookingRepository;
+    private UserService userService;
+    private ItemService itemService;
+    private  BookingMapperImp bookingMapperImp;
 
     @Override
     public BookingDto createBooking(Long userId, BookingShort bookingShort) throws BadRequestException {
