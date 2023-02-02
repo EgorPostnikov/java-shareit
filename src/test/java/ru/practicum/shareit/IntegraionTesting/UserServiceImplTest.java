@@ -1,9 +1,11 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.IntegraionTesting;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
@@ -23,11 +25,18 @@ import static org.hamcrest.Matchers.notNullValue;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserServiceImplTest {
     private final EntityManager em;
+    private final JdbcTemplate jdbcTemplate;
     private final UserService service;
+
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.update("DELETE FROM users ");
+        jdbcTemplate.update("ALTER TABLE USERS ALTER COLUMN ID RESTART WITH 1");
+    }
 
     @Test
     void saveUserTest() {
-        UserDto userDto = new UserDto(null, "some@email.com", "Пётр");
+        UserDto userDto = new UserDto(null,  "Пётр","some@email1.com");
         service.createUser(userDto);
 
         TypedQuery<User> query = em.createQuery("Select u from User u where u.email = :email", User.class);
@@ -43,7 +52,7 @@ public class UserServiceImplTest {
     @Test
     void getUserByIdTest() {
 
-        UserDto userDto = new UserDto(null, "some@email.com", "Пётр");
+        UserDto userDto = new UserDto(null,  "Пётр","some@email.com");
         service.createUser(userDto);
         UserDto user = service.getUserById(1);
 
