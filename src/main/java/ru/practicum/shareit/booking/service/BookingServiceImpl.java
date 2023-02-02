@@ -32,8 +32,6 @@ import java.util.Optional;
 @Service
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
-
 public class BookingServiceImpl implements BookingService {
     private static final Logger log = LoggerFactory.getLogger(ItemServiceImpl.class);
 
@@ -47,7 +45,7 @@ public class BookingServiceImpl implements BookingService {
         Item item = itemService.getItem(bookingShort.getItemId());
 
         if (!userService.isExistUser(userId)) {
-            throw new NoSuchElementException("User id did not found");
+            throw new NoSuchElementException("User id did not found!");
         }
         if (!item.getAvailable()) {
             throw new BadRequestException("Item not available for booking!");

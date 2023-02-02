@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -25,18 +27,21 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Setter
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
     private static final Logger log = LoggerFactory.getLogger(ItemServiceImpl.class);
-    private final UserService userService;
-    private final BookingRepository bookingRepository;
-    private final ItemRepository itemRepository;
-    private final CommentRepository commentRepository;
+    private UserService userService;
+    private BookingRepository bookingRepository;
+    private ItemRepository itemRepository;
+    private CommentRepository commentRepository;
 
     @Override
     public ItemDto createItem(Long userId, ItemDto itemDto) {
-        userService.getUserById(userId);
+        if (!userService.isExistUser(userId)) {
+            throw new NoSuchElementException("User id did not found!");
+        }
         Item item = itemRepository.save(ItemMapper.INSTANCE.toItem(itemDto, userId));
         log.info("Item with id #{} saved", item.getId());
         return ItemMapper.INSTANCE.toItemDto(item);

@@ -19,7 +19,7 @@ public class RequestTests {
     @Test
     void tesGetItemRequestByIdWithMockOk() {
         ItemRequest itemRequest = new ItemRequest(1L,"Описание тест",1L, LocalDateTime.now(),null);
-        ItemRequestServiceImpl itemRequestServiceImpl = new ItemRequestServiceImpl();
+        ItemRequestServiceImpl itemRequestServiceImpl = new ItemRequestServiceImpl(null, null);
         ItemRequestRepository mockItemRequestRepository = Mockito.mock(ItemRequestRepository.class);
         itemRequestServiceImpl.setItemRequestRepository(mockItemRequestRepository);
         UserService mockUserService = Mockito.mock(UserService.class);
@@ -44,7 +44,7 @@ public class RequestTests {
     @Test
     void tesGetItemRequestByIdWithMockWrongUser() {
         ItemRequest itemRequest = new ItemRequest(1L,"Описание тест",1L, LocalDateTime.now(),null);
-        ItemRequestServiceImpl itemRequestServiceImpl = new ItemRequestServiceImpl();
+        ItemRequestServiceImpl itemRequestServiceImpl = new ItemRequestServiceImpl(null, null);
         ItemRequestRepository mockItemRequestRepository = Mockito.mock(ItemRequestRepository.class);
         itemRequestServiceImpl.setItemRequestRepository(mockItemRequestRepository);
         UserService mockUserService = Mockito.mock(UserService.class);
@@ -70,7 +70,7 @@ public class RequestTests {
     @Test
     void tesGetItemRequestByIdWithMockWrongId() {
         ItemRequest itemRequest = new ItemRequest(1L,"Описание тест",1L, LocalDateTime.now(),null);
-        ItemRequestServiceImpl itemRequestServiceImpl = new ItemRequestServiceImpl();
+        ItemRequestServiceImpl itemRequestServiceImpl = new ItemRequestServiceImpl(null, null);
         ItemRequestRepository mockItemRequestRepository = Mockito.mock(ItemRequestRepository.class);
         itemRequestServiceImpl.setItemRequestRepository(mockItemRequestRepository);
         UserService mockUserService = Mockito.mock(UserService.class);

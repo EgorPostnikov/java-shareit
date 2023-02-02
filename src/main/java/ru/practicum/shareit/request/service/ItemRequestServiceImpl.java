@@ -18,7 +18,6 @@ import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
 @Setter
 
 public class ItemRequestServiceImpl implements ItemRequestService {
