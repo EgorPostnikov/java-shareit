@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,12 +22,9 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping(path = "/bookings")
+@RequiredArgsConstructor
 public class BookingController {
     private final BookingService bookingService;
-
-    public BookingController(BookingServiceImpl bookingService) {
-        this.bookingService = bookingService;
-    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
