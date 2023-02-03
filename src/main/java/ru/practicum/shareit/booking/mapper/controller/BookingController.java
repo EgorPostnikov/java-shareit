@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking.controller;
+package ru.practicum.shareit.booking.mapper.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionFailedException;

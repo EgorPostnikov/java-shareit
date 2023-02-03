@@ -1,4 +1,4 @@
-package ru.practicum.shareit.unitTests;
+package ru.practicum.shareit.item.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import ru.practicum.shareit.user.service.UserService;
 import java.util.NoSuchElementException;
 
 @SpringBootTest
-public class ItemTest {
+public class ItemServiceTest {
     @Test
     void testCreateItemWithMockOk() {
         Long itemId = 1L;

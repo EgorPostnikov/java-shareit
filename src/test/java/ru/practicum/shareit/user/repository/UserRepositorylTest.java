@@ -1,4 +1,4 @@
-package ru.practicum.shareit.IntegraionTesting;
+package ru.practicum.shareit.user.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.notNullValue;
         properties = "db.name=test",
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class UserServiceImplTest {
+public class UserRepositorylTest {
     private final EntityManager em;
     private final JdbcTemplate jdbcTemplate;
     private final UserService service;

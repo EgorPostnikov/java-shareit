@@ -8,13 +8,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.mapper.controller.BookingController;
 import ru.practicum.shareit.booking.model.BookedItem;
 import ru.practicum.shareit.booking.model.Booker;
 import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.BadRequestException;
-import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.persistence.EntityNotFoundException;
 import java.nio.charset.StandardCharsets;
@@ -54,17 +54,6 @@ public class BookingControllerTest {
             new BookedItem(6L, "Item2", 7L),
             new Booker(8L),
             Status.WAITING);
-
-    private UserDto userDto = new UserDto(
-            1L,
-            "John",
-            "john@mail.com");
-
-    private UserDto userDto2 = new UserDto(
-            2L,
-            "John2",
-            "john2@mail.com");
-
     @Test
     void createBooking() throws Exception {
         Long userId = 99L;

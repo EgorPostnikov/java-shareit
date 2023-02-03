@@ -1,4 +1,4 @@
-package ru.practicum.shareit.unitTests;
+package ru.practicum.shareit.user.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import ru.practicum.shareit.user.storage.UserRepository;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class UserTest {
+public class UserServiceTest {
     @Mock
     UserRepository mockUserRepository;
 

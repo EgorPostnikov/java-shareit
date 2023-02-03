@@ -1,4 +1,4 @@
-package ru.practicum.shareit.unitTests;
+package ru.practicum.shareit.booking.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 @SpringBootTest
-public class BookingTests {
+public class BookingServiceTests {
     @Test
     void testCreateBookingWithMockOk() throws BadRequestException {
         Long itemId = 1L;

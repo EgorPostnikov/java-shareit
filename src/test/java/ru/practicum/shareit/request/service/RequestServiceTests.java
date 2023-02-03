@@ -1,4 +1,4 @@
-package ru.practicum.shareit.unitTests;
+package ru.practicum.shareit.request.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @SpringBootTest
-public class RequestTests {
+public class RequestServiceTests {
     @Test
     void tesGetItemRequestByIdWithMockOk() {
         ItemRequest itemRequest = new ItemRequest(1L,"Описание тест",1L, LocalDateTime.now(),null);
