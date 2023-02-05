@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking.storage;
+package ru.practicum.shareit.booking.repository;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import ru.practicum.shareit.booking.model.BookedItem;
 import ru.practicum.shareit.booking.model.Booker;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
+import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -24,7 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 @DataJpaTest
-class BookingRepositoryTest {
+class BookingRepositoryTestWithDataJpaTest {
     @Autowired
     private TestEntityManager em;
 
@@ -110,12 +111,12 @@ class BookingRepositoryTest {
         repository.save(booking4);
         PageRequest pageRequest = PageRequest.of(0, 100, Sort.unsorted());
 
-        Collection<Booking> bookings = repository.
-                findBookingByBooker_IdAndEndBeforeOrderByStartDesc(2L, LocalDateTime.now(), pageRequest);
+        Collection<Booking> bookings = repository
+                .findBookingByBooker_IdAndEndBeforeOrderByStartDesc(2L, LocalDateTime.now(), pageRequest);
         assertThat(bookings.size(), equalTo(0));
 
-        Collection<Booking> bookings2 = repository.
-                findBookingByBooker_IdAndEndAfterOrderByStartDesc(2L, LocalDateTime.now(), pageRequest);
+        Collection<Booking> bookings2 = repository
+                .findBookingByBooker_IdAndEndAfterOrderByStartDesc(2L, LocalDateTime.now(), pageRequest);
         assertThat(bookings2.size(), equalTo(3));
         assertThat(Arrays.stream(bookings2.toArray()).findFirst().get(), equalTo(booking4));
     }

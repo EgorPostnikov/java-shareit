@@ -34,9 +34,9 @@ public class ItemServiceTest {
                 .when(mockUserService.isExistUser(Mockito.anyLong()))
                 .thenReturn(true);
 
-        ItemDto GotItemDto = itemServiceImpl.createItem(3L, itemDto);
+        ItemDto gotItemDto = itemServiceImpl.createItem(3L, itemDto);
 
-        Assertions.assertEquals(1L, GotItemDto.getId());
+        Assertions.assertEquals(1L, gotItemDto.getId());
     }
 
     @Test

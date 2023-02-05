@@ -40,8 +40,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public Collection<ItemRequestDto> getItemRequests(long userId) {
         userService.getUserById(userId);
-        Collection<ItemRequest> requests = itemRequestRepository.
-                findItemRequestsByRequestorOrderByCreatedDesc(userId);
+        Collection<ItemRequest> requests = itemRequestRepository
+                .findItemRequestsByRequestorOrderByCreatedDesc(userId);
         log.info("List of ItemRequests found, requests qty is #{} saved", requests.size());
         return ItemRequestMapper.INSTANCE.toItemRequestDtos(requests);
     }
@@ -49,8 +49,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public Collection<ItemRequestDto> getAnotherItemRequests(long userId, PageRequest sortingForRequest) {
         userService.getUserById(userId);
-        Collection<ItemRequest> requests = itemRequestRepository.
-                findItemRequestsByRequestorNotOrderByCreatedDesc(userId, sortingForRequest);
+        Collection<ItemRequest> requests = itemRequestRepository
+                .findItemRequestsByRequestorNotOrderByCreatedDesc(userId, sortingForRequest);
         log.info("List of ItemRequests found, requests qty is #{} saved", requests.size());
         return ItemRequestMapper.INSTANCE.toItemRequestDtos(requests);
     }

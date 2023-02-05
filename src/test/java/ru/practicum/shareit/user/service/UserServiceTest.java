@@ -30,8 +30,8 @@ public class UserServiceTest {
                 .when(mockUserRepository.save(Mockito.any(User.class)))
                 .thenReturn(user);
 
-        UserDto GotUserDto = userServiceImpl.createUser(userDto);
+        UserDto gotUserDto = userServiceImpl.createUser(userDto);
 
-        Assertions.assertEquals(1L, GotUserDto.getId());
+        Assertions.assertEquals(1L, gotUserDto.getId());
     }
 }

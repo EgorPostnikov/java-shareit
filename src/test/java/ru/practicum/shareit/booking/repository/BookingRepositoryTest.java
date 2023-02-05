@@ -64,8 +64,10 @@ public class BookingRepositoryTest {
         user2 = userService.createUser(user2);
         item1 = itemService.createItem(user2.getId(), item1);
         item2 = itemService.createItem(user2.getId(), item2);
-        BookingShort booking1 = new BookingShort(null, item2.getId(), LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusMinutes(2));
-        BookingShort booking2 = new BookingShort(null, item1.getId(), LocalDateTime.now().plusMinutes(2), LocalDateTime.now().plusMinutes(3));
+        BookingShort booking1 = new BookingShort(
+                null, item2.getId(), LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusMinutes(2));
+        BookingShort booking2 = new BookingShort(
+                null, item1.getId(), LocalDateTime.now().plusMinutes(2), LocalDateTime.now().plusMinutes(3));
         BookingDto savedBooking1 = bookingService.createBooking(user1.getId(), booking1);
         BookingDto savedBooking2 = bookingService.createBooking(user1.getId(), booking2);
 
@@ -103,8 +105,10 @@ public class BookingRepositoryTest {
         user2 = userService.createUser(user2);
         item1 = itemService.createItem(user2.getId(), item1);
         item2 = itemService.createItem(user2.getId(), item2);
-        BookingShort booking1 = new BookingShort(null, item2.getId(), LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusMinutes(2));
-        BookingShort booking2 = new BookingShort(null, item1.getId(), LocalDateTime.now().plusMinutes(2), LocalDateTime.now().plusMinutes(3));
+        BookingShort booking1 = new BookingShort(
+                null, item2.getId(), LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusMinutes(2));
+        BookingShort booking2 = new BookingShort(
+                null, item1.getId(), LocalDateTime.now().plusMinutes(2), LocalDateTime.now().plusMinutes(3));
         BookingDto savedBooking1 = bookingService.createBooking(user1.getId(), booking1);
         BookingDto savedBooking2 = bookingService.createBooking(user1.getId(), booking2);
 
@@ -126,8 +130,10 @@ public class BookingRepositoryTest {
         user2 = userService.createUser(user2);
         item1 = itemService.createItem(user2.getId(), item1);
         item2 = itemService.createItem(user2.getId(), item2);
-        BookingShort booking1 = new BookingShort(null, item2.getId(), LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusMinutes(2));
-        BookingShort booking2 = new BookingShort(null, item1.getId(), LocalDateTime.now().plusMinutes(2), LocalDateTime.now().plusMinutes(3));
+        BookingShort booking1 = new BookingShort(
+                null, item2.getId(), LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusMinutes(2));
+        BookingShort booking2 = new BookingShort(
+                null, item1.getId(), LocalDateTime.now().plusMinutes(2), LocalDateTime.now().plusMinutes(3));
         BookingDto savedBooking1 = bookingService.createBooking(user1.getId(), booking1);
         BookingDto savedBooking2 = bookingService.createBooking(user1.getId(), booking2);
 
@@ -154,8 +160,10 @@ public class BookingRepositoryTest {
         user2 = userService.createUser(user2);
         item1 = itemService.createItem(user2.getId(), item1);
         item2 = itemService.createItem(user2.getId(), item2);
-        BookingShort booking1 = new BookingShort(null, item2.getId(), LocalDateTime.now().plusSeconds(1), LocalDateTime.now().plusMinutes(2));
-        BookingShort booking2 = new BookingShort(null, item1.getId(), LocalDateTime.now().plusMinutes(2), LocalDateTime.now().plusMinutes(3));
+        BookingShort booking1 = new BookingShort(
+                null, item2.getId(), LocalDateTime.now().plusSeconds(1), LocalDateTime.now().plusMinutes(2));
+        BookingShort booking2 = new BookingShort(
+                null, item1.getId(), LocalDateTime.now().plusMinutes(2), LocalDateTime.now().plusMinutes(3));
         BookingDto savedBooking1 = bookingService.createBooking(user1.getId(), booking1);
         BookingDto savedBooking2 = bookingService.createBooking(user1.getId(), booking2);
         TimeUnit.SECONDS.sleep(1);
