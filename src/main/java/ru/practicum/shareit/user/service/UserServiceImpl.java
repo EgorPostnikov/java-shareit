@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user.service;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-    private  UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public UserDto createUser(UserDto userDto) {

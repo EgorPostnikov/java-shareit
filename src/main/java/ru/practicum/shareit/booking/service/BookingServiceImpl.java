@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +37,7 @@ public class BookingServiceImpl implements BookingService {
     private BookingRepository bookingRepository;
     private UserService userService;
     private ItemService itemService;
-    private  BookingMapperImp bookingMapperImp;
+    private BookingMapperImp bookingMapperImp;
 
     @Override
     public BookingDto createBooking(Long userId, BookingShort bookingShort) throws BadRequestException {

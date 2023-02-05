@@ -12,7 +12,6 @@ import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
