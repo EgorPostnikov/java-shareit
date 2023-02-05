@@ -70,7 +70,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto updateBooking(Long bookingId, Long userId, Boolean approved) throws InvalidAccessException {
 
-        Booking booking = bookingRepository.findById(bookingId).get();;
+        Booking booking = bookingRepository.findById(bookingId).get();
+        ;
         BookedItem bookedItem = booking.getItem();
         Long itemId = bookedItem.getId();
         Item item = itemService.getItem(itemId);
