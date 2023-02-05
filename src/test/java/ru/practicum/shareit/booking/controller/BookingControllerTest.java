@@ -8,7 +8,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.mapper.controller.BookingController;
 import ru.practicum.shareit.booking.model.BookedItem;
 import ru.practicum.shareit.booking.model.Booker;
 import ru.practicum.shareit.booking.model.State;
@@ -39,7 +38,7 @@ public class BookingControllerTest {
     BookingService bookingService;
     @Autowired
     private MockMvc mvc;
-    private BookingDto booking1 = new BookingDto(
+    private final BookingDto booking1 = new BookingDto(
             1L,
             LocalDateTime.now().plusMinutes(1),
             LocalDateTime.now().plusMinutes(2),
@@ -47,13 +46,14 @@ public class BookingControllerTest {
             new Booker(4L),
             Status.APPROVED);
 
-    private BookingDto booking2 = new BookingDto(
+    private final BookingDto booking2 = new BookingDto(
             5L,
             LocalDateTime.now().plusMinutes(3),
             LocalDateTime.now().plusMinutes(4),
             new BookedItem(6L, "Item2", 7L),
             new Booker(8L),
             Status.WAITING);
+
     @Test
     void createBooking() throws Exception {
         Long userId = 99L;

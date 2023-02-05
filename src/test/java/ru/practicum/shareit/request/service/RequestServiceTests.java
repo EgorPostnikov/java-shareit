@@ -6,7 +6,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.request.service.ItemRequestServiceImpl;
 import ru.practicum.shareit.request.storage.ItemRequestRepository;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -18,7 +17,7 @@ import java.util.Optional;
 public class RequestServiceTests {
     @Test
     void tesGetItemRequestByIdWithMockOk() {
-        ItemRequest itemRequest = new ItemRequest(1L,"Описание тест",1L, LocalDateTime.now(),null);
+        ItemRequest itemRequest = new ItemRequest(1L, "Описание тест", 1L, LocalDateTime.now(), null);
         ItemRequestServiceImpl itemRequestServiceImpl = new ItemRequestServiceImpl(null, null);
         ItemRequestRepository mockItemRequestRepository = Mockito.mock(ItemRequestRepository.class);
         itemRequestServiceImpl.setItemRequestRepository(mockItemRequestRepository);
@@ -43,7 +42,7 @@ public class RequestServiceTests {
 
     @Test
     void tesGetItemRequestByIdWithMockWrongUser() {
-        ItemRequest itemRequest = new ItemRequest(1L,"Описание тест",1L, LocalDateTime.now(),null);
+        ItemRequest itemRequest = new ItemRequest(1L, "Описание тест", 1L, LocalDateTime.now(), null);
         ItemRequestServiceImpl itemRequestServiceImpl = new ItemRequestServiceImpl(null, null);
         ItemRequestRepository mockItemRequestRepository = Mockito.mock(ItemRequestRepository.class);
         itemRequestServiceImpl.setItemRequestRepository(mockItemRequestRepository);
@@ -69,7 +68,7 @@ public class RequestServiceTests {
 
     @Test
     void tesGetItemRequestByIdWithMockWrongId() {
-        ItemRequest itemRequest = new ItemRequest(1L,"Описание тест",1L, LocalDateTime.now(),null);
+        ItemRequest itemRequest = new ItemRequest(1L, "Описание тест", 1L, LocalDateTime.now(), null);
         ItemRequestServiceImpl itemRequestServiceImpl = new ItemRequestServiceImpl(null, null);
         ItemRequestRepository mockItemRequestRepository = Mockito.mock(ItemRequestRepository.class);
         itemRequestServiceImpl.setItemRequestRepository(mockItemRequestRepository);

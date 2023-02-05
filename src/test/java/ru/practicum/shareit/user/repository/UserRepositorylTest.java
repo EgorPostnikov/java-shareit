@@ -36,7 +36,7 @@ public class UserRepositorylTest {
 
     @Test
     void saveUserTest() {
-        UserDto userDto = new UserDto(null,  "Пётр","some@email1.com");
+        UserDto userDto = new UserDto(null, "Пётр", "some@email1.com");
         service.createUser(userDto);
 
         TypedQuery<User> query = em.createQuery("Select u from User u where u.email = :email", User.class);
@@ -52,7 +52,7 @@ public class UserRepositorylTest {
     @Test
     void getUserByIdTest() {
 
-        UserDto userDto = new UserDto(null,  "Пётр","some@email.com");
+        UserDto userDto = new UserDto(null, "Пётр", "some@email.com");
         service.createUser(userDto);
         UserDto user = service.getUserById(1);
 

@@ -25,7 +25,6 @@ import static org.hamcrest.Matchers.*;
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ItemRepositorylTest {
-    private final EntityManager em;
     private final JdbcTemplate jdbcTemplate;
     private final UserService userService;
     private final ItemService itemService;
@@ -41,24 +40,23 @@ public class ItemRepositorylTest {
 
     @Test
     void getItemByIdTest() {
-        UserDto userDto1 = new UserDto(null,  "User1","some1@email.com");
-        UserDto userDto2 = new UserDto(null,  "User2","some2@email.com");
-        ItemDto itemDto1 = new ItemDto(null,"Item1","Item1 description",true,
-                null,null,null);
-        ItemDto itemDto2 = new ItemDto(null,"Item2","Item2 description",true,
-                null,null,null);
-        userDto1=userService.createUser(userDto1);
-        userDto2=userService.createUser(userDto2);
-        itemService.createItem(userDto2.getId(),itemDto1);
-        itemService.createItem(userDto2.getId(),itemDto2);
+        UserDto userDto1 = new UserDto(null, "User1", "some1@email.com");
+        UserDto userDto2 = new UserDto(null, "User2", "some2@email.com");
+        ItemDto itemDto1 = new ItemDto(null, "Item1", "Item1 description", true,
+                null, null, null);
+        ItemDto itemDto2 = new ItemDto(null, "Item2", "Item2 description", true,
+                null, null, null);
+        userDto2 = userService.createUser(userDto2);
+        itemService.createItem(userDto2.getId(), itemDto1);
+        itemService.createItem(userDto2.getId(), itemDto2);
 
-        ItemDtoWithComments item = itemService.getItemById(1L,1L);
+        ItemDtoWithComments item = itemService.getItemById(1L, 1L);
         assertThat(item.getId(), notNullValue());
         assertThat(item.getName(), equalTo(itemDto1.getName()));
         assertThat(item.getDescription(), equalTo(itemDto1.getDescription()));
-        assertThat(item.getAvailable(),equalTo(itemDto1.getAvailable()));
-        assertThat(item.getLastBooking(),nullValue());
-        assertThat(item.getNextBooking(),nullValue());
-        assertThat(item.getComments().size(),equalTo(0));
+        assertThat(item.getAvailable(), equalTo(itemDto1.getAvailable()));
+        assertThat(item.getLastBooking(), nullValue());
+        assertThat(item.getNextBooking(), nullValue());
+        assertThat(item.getComments().size(), equalTo(0));
     }
 }

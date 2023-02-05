@@ -6,7 +6,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.service.ItemServiceImpl;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -21,7 +20,7 @@ public class ItemServiceTest {
         Item item = new Item(itemId, "Item name", "Item description", true, ownerId, null);
         ItemDto itemDto = new ItemDto(itemId, "Item name", "Item description", true, null, null, null);
 
-        ItemServiceImpl itemServiceImpl = new ItemServiceImpl(null, null, null,null);
+        ItemServiceImpl itemServiceImpl = new ItemServiceImpl(null, null, null, null);
 
         ItemRepository mockItemRepository = Mockito.mock(ItemRepository.class);
         itemServiceImpl.setItemRepository(mockItemRepository);
@@ -47,7 +46,7 @@ public class ItemServiceTest {
         Item item = new Item(itemId, "Item name", "Item description", true, ownerId, null);
         ItemDto itemDto = new ItemDto(itemId, "Item name", "Item description", true, null, null, null);
 
-        ItemServiceImpl itemServiceImpl = new ItemServiceImpl(null, null, null,null);
+        ItemServiceImpl itemServiceImpl = new ItemServiceImpl(null, null, null, null);
 
         ItemRepository mockItemRepository = Mockito.mock(ItemRepository.class);
         itemServiceImpl.setItemRepository(mockItemRepository);

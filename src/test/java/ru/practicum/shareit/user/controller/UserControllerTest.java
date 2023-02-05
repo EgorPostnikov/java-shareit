@@ -11,11 +11,9 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.validation.ValidationException;
 
-import javax.persistence.EntityNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.hamcrest.Matchers.is;
@@ -34,11 +32,11 @@ public class UserControllerTest {
     UserService userService;
     @Autowired
     private MockMvc mvc;
-    private UserDto userDto = new UserDto(
+    private final UserDto userDto = new UserDto(
             1L,
             "John",
             "john@mail.com");
-    private UserDto userDto2 = new UserDto(
+    private final UserDto userDto2 = new UserDto(
             2L,
             "John2",
             "john2@mail.com");

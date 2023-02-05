@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.item.controller.ItemController;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -37,13 +36,13 @@ public class ItemControllerTest {
     ItemService itemService;
     @Autowired
     private MockMvc mvc;
-    private CommentDto comment1 = new CommentDto(
+    private final CommentDto comment1 = new CommentDto(
             5L,
             "Commentaries",
             6L,
             7L,
             "Autor");
-    private ItemDto item1 = new ItemDto(
+    private final ItemDto item1 = new ItemDto(
             1L,
             "Item1",
             "Description1",
@@ -51,7 +50,7 @@ public class ItemControllerTest {
             2L,
             new ItemBookingDto(11L, 12L),
             new ItemBookingDto(13L, 14L));
-    private ItemDtoWithComments item2 = new ItemDtoWithComments(
+    private final ItemDtoWithComments item2 = new ItemDtoWithComments(
             3L,
             "Item2",
             "Description2",
