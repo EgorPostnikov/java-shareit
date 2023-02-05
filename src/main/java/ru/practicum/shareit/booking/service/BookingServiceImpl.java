@@ -70,7 +70,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto updateBooking(Long bookingId, Long userId, Boolean approved) throws InvalidAccessException {
 
-        Booking booking = getById(bookingId);
+        Booking booking = bookingRepository.findById(bookingId).get();;
         BookedItem bookedItem = booking.getItem();
         Long itemId = bookedItem.getId();
         Item item = itemService.getItem(itemId);
@@ -95,7 +95,7 @@ public class BookingServiceImpl implements BookingService {
         if (!isExistBooking(bookingId)) {
             throw new NoSuchElementException("Booking with id #" + bookingId + " didn't found!");
         }
-        Booking booking = getById(bookingId);
+        Booking booking = bookingRepository.findById(bookingId).get();
         Item item = itemService.getItem(booking.getItem().getId());
         if ((!booking.getBooker().getId().equals(userId)) && (!item.getOwner().equals(userId))) {
             throw new InvalidAccessException("User have not roots!");
@@ -182,14 +182,6 @@ public class BookingServiceImpl implements BookingService {
 
     public boolean isExistBooking(Long bookingId) {
         return bookingRepository.existsById(bookingId);
-    }
-
-    public Booking getById(Long bookingId) {
-        Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
-        if (bookingOptional.isEmpty()) {
-            throw new NoSuchElementException("Data not found!");
-        }
-        return bookingOptional.get();
     }
 
 }
