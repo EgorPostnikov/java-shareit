@@ -1,10 +1,12 @@
 package ru.practicum.shareit.booking.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -14,6 +16,7 @@ import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.BadRequestException;
+import ru.practicum.shareit.exception.InvalidAccessException;
 
 import javax.persistence.EntityNotFoundException;
 import java.nio.charset.StandardCharsets;
@@ -218,6 +221,37 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.message", is("Message")));
     }
 
+    @Test
+    void handleConversionException() throws Exception {
+        Long userId = 99L;
+        when(bookingService.createBooking(anyLong(), any()))
+                .thenThrow(new ConversionFailedException(null, null, null, null));
+        mvc.perform(post("/bookings")
+                        .content(mapper.writeValueAsString(booking1))
+                        .header("X-Sharer-User-Id", userId)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error", is("Unknown state: UNSUPPORTED_STATUS")));
+    }
+
+    @Test
+    void handleInvalidAccessException() throws Exception {
+        Long userId = 99L;
+        when(bookingService.updateBooking(anyLong(),any(), any()))
+                .thenThrow(new InvalidAccessException("Message"));
+
+        mvc.perform(post("/bookings")
+                        .content(mapper.writeValueAsString(booking1))
+                        .header("X-Sharer-User-Id", userId)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+    }
 }
+
 
 
