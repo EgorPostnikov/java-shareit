@@ -61,4 +61,26 @@ public class UserRepositorylTest {
         assertThat(user.getName(), equalTo(userDto.getName()));
 
     }
+
+    @Test
+    void isExistUser() {
+
+        UserDto userDto = new UserDto(null, "Пётр", "some2@email.com");
+        service.createUser(userDto);
+        Boolean isExist = service.isExistUser(1L);
+
+        assertThat(isExist, equalTo(true));
+
+    }
+
+    @Test
+    void isExistEmail() {
+
+        UserDto userDto = new UserDto(null, "Пётр", "some2@email.com");
+        service.createUser(userDto);
+        Boolean isExist = service.isExistEmail("some2@email.com");
+
+        assertThat(isExist, equalTo(true));
+
+    }
 }

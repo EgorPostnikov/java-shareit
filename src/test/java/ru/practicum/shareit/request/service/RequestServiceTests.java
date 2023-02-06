@@ -15,10 +15,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -57,6 +54,7 @@ public class RequestServiceTests {
         Assertions.assertEquals(itemRequest.getRequestor(), itemRequestDto.getRequestor());
         Assertions.assertEquals(itemRequest.getDescription(), itemRequestDto.getDescription());
         Assertions.assertEquals(itemRequest.getCreated(), itemRequestDto.getCreated());
+        Assertions.assertEquals(itemRequest.getItems(), itemRequestDto.getItems());
     }
 
     @Test
@@ -97,8 +95,13 @@ public class RequestServiceTests {
                 .thenReturn(requests);
 
         Collection<ItemRequestDto> gotRequests = itemRequestServiceImpl.getItemRequests(1L);
-
+        ItemRequestDto gotRequest=gotRequests.stream().findFirst().get();
         Assertions.assertEquals(1, gotRequests.size());
+        Assertions.assertEquals(itemRequest.getId(), gotRequest.getId());
+        Assertions.assertEquals(itemRequest.getRequestor(), gotRequest.getRequestor());
+        Assertions.assertEquals(itemRequest.getDescription(), gotRequest.getDescription());
+        Assertions.assertEquals(itemRequest.getCreated(), gotRequest.getCreated());
+        Assertions.assertEquals(itemRequest.getItems(), gotRequest.getItems());
     }
 
     @Test
@@ -118,8 +121,14 @@ public class RequestServiceTests {
                 .thenReturn(requests);
         PageRequest pageRequest = PageRequest.of(0, 100, Sort.unsorted());
         Collection<ItemRequestDto> gotRequests = itemRequestServiceImpl.getAnotherItemRequests(1L, pageRequest);
-
+        ItemRequestDto gotRequest=gotRequests.stream().findFirst().get();
         Assertions.assertEquals(1, gotRequests.size());
+        Assertions.assertEquals(itemRequest.getId(), gotRequest.getId());
+        Assertions.assertEquals(itemRequest.getRequestor(), gotRequest.getRequestor());
+        Assertions.assertEquals(itemRequest.getDescription(), gotRequest.getDescription());
+        Assertions.assertEquals(itemRequest.getCreated(), gotRequest.getCreated());
+        Assertions.assertEquals(itemRequest.getItems(), gotRequest.getItems());
+
     }
 
     @Test
@@ -146,6 +155,7 @@ public class RequestServiceTests {
         Assertions.assertEquals(itemRequest.getRequestor(), gotItemRequest.getRequestor());
         Assertions.assertEquals(itemRequest.getDescription(), gotItemRequest.getDescription());
         Assertions.assertEquals(itemRequest.getCreated(), gotItemRequest.getCreated());
+        Assertions.assertEquals(itemRequest.getItems(), gotItemRequest.getItems());
     }
 
     @Test
