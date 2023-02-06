@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -239,7 +238,7 @@ public class BookingControllerTest {
     @Test
     void handleInvalidAccessException() throws Exception {
         Long userId = 99L;
-        when(bookingService.updateBooking(anyLong(),any(), any()))
+        when(bookingService.updateBooking(anyLong(), any(), any()))
                 .thenThrow(new InvalidAccessException("Message"));
 
         mvc.perform(post("/bookings")
