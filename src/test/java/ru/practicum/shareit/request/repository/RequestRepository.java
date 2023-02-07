@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.ItemForRequest;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.mapper.ItemRequestMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.storage.ItemRequestRepository;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -18,6 +22,7 @@ import ru.practicum.shareit.user.service.UserService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -209,4 +214,110 @@ public class RequestRepository {
 
         assertThat(isExist, equalTo(true));
     }
+
+    @Test
+    void ItemRequestMapper() {
+        ItemRequest request = new ItemRequest(
+                1L,
+                "Description",
+                2L,
+                LocalDateTime.now().plusSeconds(1),
+                new HashSet<>());
+        ItemForRequest itemForRequest = new ItemForRequest(
+                1L,
+                "Item",
+                "Description",
+                true,
+                1L,
+                1L);
+        request.getItems().add(itemForRequest);
+        ItemRequestDto gotRequest = ItemRequestMapper.INSTANCE.toItemRequestDto(request);
+
+        assertThat(gotRequest.getId(), equalTo(request.getId()));
+        assertThat(gotRequest.getDescription(), equalTo(request.getDescription()));
+        assertThat(gotRequest.getRequestor(), equalTo(request.getRequestor()));
+        assertThat(gotRequest.getCreated(), equalTo(request.getCreated()));
+        Item item = gotRequest.getItems().stream().findFirst().get();
+        Assertions.assertEquals(item.getId(), itemForRequest.getId());
+        Assertions.assertEquals(item.getName(), itemForRequest.getName());
+        Assertions.assertEquals(item.getDescription(), itemForRequest.getDescription());
+        Assertions.assertEquals(item.getRequestId(), itemForRequest.getRequestId());
+        Assertions.assertEquals(item.getOwner(), itemForRequest.getOwner());
+        Assertions.assertEquals(item.getAvailable(), itemForRequest.getAvailable());
+    }
+
+    @Test
+    void ItemRequestMapper2() {
+        ItemRequestDto request = new ItemRequestDto(
+                1L,
+                "Description",
+                2L,
+                LocalDateTime.now().plusSeconds(1),
+                new HashSet<>());
+        Item itemForRequest = new Item(
+                1L,
+                "Item",
+                "Description",
+                true,
+                1L,
+                1L);
+        request.getItems().add(itemForRequest);
+        ItemRequest gotRequest = ItemRequestMapper.INSTANCE.toItemRequest(request);
+
+        assertThat(gotRequest.getId(), equalTo(request.getId()));
+        assertThat(gotRequest.getDescription(), equalTo(request.getDescription()));
+        assertThat(gotRequest.getRequestor(), equalTo(request.getRequestor()));
+        assertThat(gotRequest.getCreated(), equalTo(request.getCreated()));
+        ItemForRequest item = gotRequest.getItems().stream().findFirst().get();
+        Assertions.assertEquals(item.getId(), itemForRequest.getId());
+        Assertions.assertEquals(item.getName(), itemForRequest.getName());
+        Assertions.assertEquals(item.getDescription(), itemForRequest.getDescription());
+        Assertions.assertEquals(item.getRequestId(), itemForRequest.getRequestId());
+        Assertions.assertEquals(item.getOwner(), itemForRequest.getOwner());
+        Assertions.assertEquals(item.getAvailable(), itemForRequest.getAvailable());
+    }
+
+    @Test
+    void ItemRequestMapper3() {
+        ItemRequest request = new ItemRequest(
+                1L,
+                "Description",
+                2L,
+                LocalDateTime.now().plusSeconds(1),
+                new HashSet<>());
+        ItemRequest request2 = new ItemRequest(
+                1L,
+                "Description",
+                2L,
+                LocalDateTime.now().plusSeconds(1),
+                new HashSet<>());
+        ItemForRequest itemForRequest = new ItemForRequest(
+                1L,
+                "Item",
+                "Description",
+                true,
+                1L,
+                1L);
+        request.getItems().add(itemForRequest);
+        Collection<ItemRequest> requests = new ArrayList<>();
+        requests.add(request);
+        requests.add(request2);
+
+        Collection<ItemRequestDto> gotRequests = ItemRequestMapper.INSTANCE.toItemRequestDtos(requests);
+        ItemRequestDto gotRequest = gotRequests.stream().findFirst().get();
+
+        assertThat(gotRequest.getId(), equalTo(request.getId()));
+        assertThat(gotRequest.getDescription(), equalTo(request.getDescription()));
+        assertThat(gotRequest.getRequestor(), equalTo(request.getRequestor()));
+        assertThat(gotRequest.getCreated(), equalTo(request.getCreated()));
+        Item item = gotRequest.getItems().stream().findFirst().get();
+        Assertions.assertEquals(item.getId(), itemForRequest.getId());
+        Assertions.assertEquals(item.getName(), itemForRequest.getName());
+        Assertions.assertEquals(item.getDescription(), itemForRequest.getDescription());
+        Assertions.assertEquals(item.getRequestId(), itemForRequest.getRequestId());
+        Assertions.assertEquals(item.getOwner(), itemForRequest.getOwner());
+        Assertions.assertEquals(item.getAvailable(), itemForRequest.getAvailable());
+    }
+
+
 }
