@@ -45,6 +45,12 @@ public class RequestServiceTest {
             1L,
             LocalDateTime.now(),
             new HashSet<>());
+    ItemRequestDto itemRequestDto = new ItemRequestDto(
+            1L,
+            "Описание тест",
+            1L,
+            LocalDateTime.now(),
+            new HashSet<>());
 
     @Test
     void tesGetItemRequestByIdWithMockOk() {
@@ -217,6 +223,44 @@ public class RequestServiceTest {
         final NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
                 () -> itemRequestServiceImpl.getItemRequestById(1L, 1L));
+
+        Assertions.assertEquals("User id did not found!", exception.getMessage());
+    }
+
+    @Test
+    void createItemRequest() {
+        ItemRequestServiceImpl itemRequestServiceImpl = new ItemRequestServiceImpl(null, null);
+        itemRequestServiceImpl.setItemRequestRepository(mockItemRequestRepository);
+        itemRequestServiceImpl.setUserService(mockUserService);
+
+        Mockito
+                .when(mockUserService.isExistUser(Mockito.eq(1L)))
+                .thenReturn(true);
+        Mockito
+                .when(mockItemRequestRepository.save(Mockito.any()))
+                .thenReturn(itemRequest);
+
+        ItemRequestDto gotItemRequest = itemRequestServiceImpl.createItemRequest(1L, itemRequestDto);
+
+        Assertions.assertEquals(itemRequest.getId(), gotItemRequest.getId());
+        Assertions.assertEquals(itemRequest.getRequestor(), gotItemRequest.getRequestor());
+        Assertions.assertEquals(itemRequest.getDescription(), gotItemRequest.getDescription());
+        Assertions.assertEquals(itemRequest.getCreated(), gotItemRequest.getCreated());
+        Assertions.assertEquals(itemRequest.getItems(), gotItemRequest.getItems());
+    }
+
+    @Test
+    void createItemRequest2() {
+        ItemRequestServiceImpl itemRequestServiceImpl = new ItemRequestServiceImpl(null, null);
+        itemRequestServiceImpl.setUserService(mockUserService);
+
+        Mockito
+                .when(mockUserService.isExistUser(Mockito.eq(1L)))
+                .thenReturn(false);
+
+        final NoSuchElementException exception = Assertions.assertThrows(
+                NoSuchElementException.class,
+                () -> itemRequestServiceImpl.createItemRequest(1L, itemRequestDto));
 
         Assertions.assertEquals("User id did not found!", exception.getMessage());
     }
