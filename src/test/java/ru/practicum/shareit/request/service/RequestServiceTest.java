@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import ru.practicum.shareit.item.model.ItemForRequest;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.storage.ItemRequestRepository;
@@ -15,10 +16,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -27,15 +25,32 @@ public class RequestServiceTest {
     UserService mockUserService;
     @Mock
     ItemRequestRepository mockItemRequestRepository;
+    ItemForRequest itemForRequest=new ItemForRequest(
+            1L,
+            "Item",
+            "Description",
+            true,
+            1L,
+            1L);
+    ItemForRequest itemForRequest2=new ItemForRequest(
+            1L,
+            "Item",
+            "Description",
+            true,
+            1L,
+            1L);
     ItemRequest itemRequest = new ItemRequest(
             1L,
             "Описание тест",
             1L,
             LocalDateTime.now(),
-            null);
+            new HashSet<>());
 
     @Test
     void tesGetItemRequestByIdWithMockOk() {
+        ItemRequest itemRequest2 = itemRequest;
+        itemRequest2.getItems().add(itemForRequest);
+        itemRequest2.getItems().add(itemForRequest2);
         ItemRequestServiceImpl itemRequestServiceImpl = new ItemRequestServiceImpl(null, null);
         itemRequestServiceImpl.setItemRequestRepository(mockItemRequestRepository);
         itemRequestServiceImpl.setUserService(mockUserService);
@@ -45,19 +60,24 @@ public class RequestServiceTest {
                 .thenReturn(true);
         Mockito
                 .when(mockItemRequestRepository.findById(Mockito.anyLong()))
-                .thenReturn(Optional.of(itemRequest));
+                .thenReturn(Optional.of(itemRequest2));
         Mockito
                 .when(mockUserService.isExistUser(Mockito.anyLong()))
                 .thenReturn(true);
 
         ItemRequestDto itemRequestDto = itemRequestServiceImpl.getItemRequestById(1L, 1L);
-
+        ItemForRequest item = itemRequest2.getItems().stream().findFirst().get();
         Assertions.assertEquals("Описание тест", itemRequestDto.getDescription());
         Assertions.assertEquals(itemRequest.getId(), itemRequestDto.getId());
         Assertions.assertEquals(itemRequest.getRequestor(), itemRequestDto.getRequestor());
         Assertions.assertEquals(itemRequest.getDescription(), itemRequestDto.getDescription());
         Assertions.assertEquals(itemRequest.getCreated(), itemRequestDto.getCreated());
-        Assertions.assertEquals(itemRequest.getItems(), itemRequestDto.getItems());
+        Assertions.assertEquals(item.getId(), itemForRequest2.getId());
+        Assertions.assertEquals(item.getName(), itemForRequest2.getName());
+        Assertions.assertEquals(item.getDescription(), itemForRequest2.getDescription());
+        Assertions.assertEquals(item.getRequestId(), itemForRequest2.getRequestId());
+        Assertions.assertEquals(item.getOwner(), itemForRequest2.getOwner());
+        Assertions.assertEquals(item.getAvailable(), itemForRequest2.getAvailable());
     }
 
     @Test
