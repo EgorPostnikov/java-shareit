@@ -8,8 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithComments;
+import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -21,6 +23,7 @@ import ru.practicum.shareit.user.service.UserService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -294,5 +297,60 @@ public class ItemRepositorylTest {
         assertThat(comment.getText(), equalTo(comment1.getText()));
         assertThat(comment.getAuthor().getId(), equalTo(comment1.getAuthor().getId()));
         assertThat(comment.getCreated(), equalTo(comment1.getCreated()));
+    }
+
+    @Test
+    void commentMapperTest() {
+        Comment comment = new Comment(
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        CommentDto comment1 = CommentMapper.INSTANCE.toCommentDto(comment);
+
+        assertThat(comment1.getId(), equalTo(null));
+        assertThat(comment1.getItem(), equalTo(null));
+        assertThat(comment1.getText(), equalTo(null));
+        assertThat(comment1.getAuthorName(), equalTo(null));
+        assertThat(comment1.getAuthorId(), equalTo(null));
+    }
+
+    @Test
+    void commentMapperTest2() {
+        CommentDto comment = new CommentDto(
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        Comment comment1 = CommentMapper.INSTANCE.toComment(comment);
+
+        assertThat(comment1.getId(), equalTo(null));
+        assertThat(comment1.getItem(), equalTo(null));
+        assertThat(comment1.getText(), equalTo(null));
+        assertThat(comment1.getAuthor().getId(), equalTo(null));
+        assertThat(comment1.getItem(), equalTo(null));
+    }
+
+    @Test
+    void commentMapperTest3() {
+        Comment comment = new Comment(
+                null,
+                null,
+                null,
+                null,
+                null);
+        Collection<Comment> comments = new ArrayList<>();
+        comments.add(comment);
+        Collection<CommentDto> gotComments = CommentMapper.INSTANCE.toCommentDtos(comments);
+        CommentDto comment1 = gotComments.stream().findFirst().get();
+        assertThat(comment1.getId(), equalTo(null));
+        assertThat(comment1.getItem(), equalTo(null));
+        assertThat(comment1.getText(), equalTo(null));
+        assertThat(comment1.getAuthorId(), equalTo(null));
+        assertThat(comment1.getItem(), equalTo(null));
     }
 }
