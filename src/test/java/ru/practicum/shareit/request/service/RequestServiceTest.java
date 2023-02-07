@@ -25,14 +25,14 @@ public class RequestServiceTest {
     UserService mockUserService;
     @Mock
     ItemRequestRepository mockItemRequestRepository;
-    ItemForRequest itemForRequest=new ItemForRequest(
+    ItemForRequest itemForRequest = new ItemForRequest(
             1L,
             "Item",
             "Description",
             true,
             1L,
             1L);
-    ItemForRequest itemForRequest2=new ItemForRequest(
+    ItemForRequest itemForRequest2 = new ItemForRequest(
             1L,
             "Item",
             "Description",
