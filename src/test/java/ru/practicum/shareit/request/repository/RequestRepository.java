@@ -216,7 +216,7 @@ public class RequestRepository {
     }
 
     @Test
-    void ItemRequestMapper() {
+    void itemRequestMapperTest1() {
         ItemRequest request = new ItemRequest(
                 1L,
                 "Description",
@@ -247,7 +247,7 @@ public class RequestRepository {
     }
 
     @Test
-    void ItemRequestMapper2() {
+    void itemRequestMapperTest2() {
         ItemRequestDto request = new ItemRequestDto(
                 1L,
                 "Description",
@@ -278,7 +278,7 @@ public class RequestRepository {
     }
 
     @Test
-    void ItemRequestMapper3() {
+    void itemRequestMapperTest3() {
         ItemRequest request = new ItemRequest(
                 1L,
                 "Description",
