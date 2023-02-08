@@ -32,7 +32,6 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 public class BookingServiceImpl implements BookingService {
     private static final Logger log = LoggerFactory.getLogger(ItemServiceImpl.class);
-
     private BookingRepository bookingRepository;
     private UserService userService;
     private ItemService itemService;
@@ -43,10 +42,10 @@ public class BookingServiceImpl implements BookingService {
         Item item = itemService.getItem(bookingShort.getItemId());
 
         if (!userService.isExistUser(userId)) {
-            throw new NoSuchElementException("User id did not found!");
+            throw new NoSuchElementException("User id #" + userId + " did not found!");
         }
         if (!item.getAvailable()) {
-            throw new BadRequestException("Item not available for booking!");
+            throw new BadRequestException("Item id#" + item.getId() + " not available for booking!");
         }
         if (bookingShort.getEnd().isBefore(bookingShort.getStart())) {
             throw new BadRequestException("Booking end time is before start time!");
@@ -78,7 +77,7 @@ public class BookingServiceImpl implements BookingService {
             throw new EntityNotFoundException("Status is already set");
         }
         if (!item.getOwner().equals(userId)) {
-            throw new InvalidAccessException("User have not roots!");
+            throw new InvalidAccessException("User " + userId + " have not roots!");
         }
         if (approved) {
             booking.setStatus(Status.APPROVED);
@@ -98,7 +97,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId).get();
         Item item = itemService.getItem(booking.getItem().getId());
         if ((!booking.getBooker().getId().equals(userId)) && (!item.getOwner().equals(userId))) {
-            throw new InvalidAccessException("User have not roots!");
+            throw new InvalidAccessException("User id#" + userId + " have not roots!");
         }
         log.info("Booking with id #{} found", booking.getId());
         return BookingMapper.INSTANCE.toBookingDto(booking);

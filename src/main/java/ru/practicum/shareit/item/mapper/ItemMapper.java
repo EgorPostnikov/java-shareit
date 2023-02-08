@@ -17,7 +17,7 @@ public interface ItemMapper {
 
     ItemDtoWithComments toItemDtoWithComments(Item item);
 
-    @Mapping(target = "owner", source = "userId")
+    @Mapping(target = "owner", expression = "java(userId)")
     Item toItem(ItemDto itemDto, Long userId);
 
     Collection<ItemDto> toItemDtos(Collection<Item> items);

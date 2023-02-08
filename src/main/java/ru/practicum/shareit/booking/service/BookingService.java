@@ -20,7 +20,3 @@ public interface BookingService {
 
     Collection<BookingDto> getBookingsOfUsersItems(Long userId, State state, PageRequest pageRequest);
 }
-/*Warning:  Rule violated for bundle shareit: lines covered ratio is 0.4, but expected minimum is 0.9
-        Warning:  Rule violated for bundle shareit: branches covered ratio is 0.2, but expected minimum is 0.6
-        Warning:  Rule violated for bundle shareit: complexity covered ratio is 0.4, but expected minimum is 0.6
-        Warning:  Rule violated for bundle shareit: methods covered ratio is 0.6, but expected minimum is 0.7*/

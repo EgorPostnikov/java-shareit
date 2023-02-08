@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking.service;
+package ru.practicum.shareit.booking.repository.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShort;
 import ru.practicum.shareit.booking.mapper.BookingMapperImp;
 import ru.practicum.shareit.booking.model.*;
+import ru.practicum.shareit.booking.service.BookingServiceImpl;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.InvalidAccessException;
@@ -149,7 +150,7 @@ public class BookingServiceTest {
                 InvalidAccessException.class,
                 () -> bookingServiceImpl.updateBooking(1L, 3L, true));
 
-        Assertions.assertEquals("User have not roots!", exception.getMessage());
+        Assertions.assertEquals("User 3 have not roots!", exception.getMessage());
     }
 
     @Test
@@ -191,7 +192,7 @@ public class BookingServiceTest {
                 InvalidAccessException.class,
                 () -> bookingServiceImpl.getBookingById(1L, 3L));
 
-        Assertions.assertEquals("User have not roots!", exception.getMessage());
+        Assertions.assertEquals("User id#3 have not roots!", exception.getMessage());
     }
 
     @Test
@@ -618,7 +619,7 @@ public class BookingServiceTest {
                 NoSuchElementException.class,
                 () -> bookingServiceImpl.createBooking(3L, bookingShort));
 
-        Assertions.assertEquals("User id did not found!", exception.getMessage());
+        Assertions.assertEquals("User id #3 did not found!", exception.getMessage());
     }
 
     @Test
@@ -696,6 +697,6 @@ public class BookingServiceTest {
                 BadRequestException.class,
                 () -> bookingServiceImpl.createBooking(3L, bookingShort));
 
-        Assertions.assertEquals("Item not available for booking!", exception.getMessage());
+        Assertions.assertEquals("Item id#1 not available for booking!", exception.getMessage());
     }
 }

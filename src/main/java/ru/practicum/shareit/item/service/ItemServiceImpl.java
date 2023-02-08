@@ -39,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto createItem(Long userId, ItemDto itemDto) {
         if (!userService.isExistUser(userId)) {
-            throw new NoSuchElementException("User id did not found!");
+            throw new NoSuchElementException("User id # " + userId + " did not found!");
         }
         Item item = itemRepository.save(ItemMapper.INSTANCE.toItem(itemDto, userId));
         log.info("Item with id #{} saved", item.getId());

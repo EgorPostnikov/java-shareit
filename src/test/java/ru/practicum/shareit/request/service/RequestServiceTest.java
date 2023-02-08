@@ -104,7 +104,7 @@ public class RequestServiceTest {
                 NoSuchElementException.class,
                 () -> itemRequestServiceImpl.getItemRequestById(1L, 1L));
 
-        Assertions.assertEquals("User id did not found!", exception.getMessage());
+        Assertions.assertEquals("User id #1 did not found!", exception.getMessage());
     }
 
     @Test
@@ -202,7 +202,7 @@ public class RequestServiceTest {
                 NoSuchElementException.class,
                 () -> itemRequestServiceImpl.getItemRequestById(1L, 1L));
 
-        Assertions.assertEquals("Request id did not found!", exception.getMessage());
+        Assertions.assertEquals("Request id #1 did not found!", exception.getMessage());
     }
 
     @Test
@@ -224,7 +224,7 @@ public class RequestServiceTest {
                 NoSuchElementException.class,
                 () -> itemRequestServiceImpl.getItemRequestById(1L, 1L));
 
-        Assertions.assertEquals("User id did not found!", exception.getMessage());
+        Assertions.assertEquals("User id #1 did not found!", exception.getMessage());
     }
 
     @Test
@@ -262,7 +262,7 @@ public class RequestServiceTest {
                 NoSuchElementException.class,
                 () -> itemRequestServiceImpl.createItemRequest(1L, itemRequestDto));
 
-        Assertions.assertEquals("User id did not found!", exception.getMessage());
+        Assertions.assertEquals("User id #1 did not found!", exception.getMessage());
     }
 }
 

@@ -122,7 +122,7 @@ public class ItemServiceTest {
                 NoSuchElementException.class,
                 () -> itemServiceImpl.createItem(3L, itemDto));
 
-        Assertions.assertEquals("User id did not found!", exception.getMessage());
+        Assertions.assertEquals("User id # 3 did not found!", exception.getMessage());
     }
 
     @Test

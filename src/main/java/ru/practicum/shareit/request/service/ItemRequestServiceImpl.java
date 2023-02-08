@@ -29,7 +29,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestDto createItemRequest(long userId, ItemRequestDto itemRequestDto) {
         ItemRequest request = ItemRequestMapper.INSTANCE.toItemRequest(itemRequestDto);
         if (!userService.isExistUser(userId)) {
-            throw new NoSuchElementException("User id did not found!");
+            throw new NoSuchElementException("User id #" + userId + " did not found!");
         }
         request.setRequestor(userId);
         request = itemRequestRepository.save(request);
@@ -58,10 +58,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public ItemRequestDto getItemRequestById(long itemRequestId, Long userId) {
         if (!itemRequestRepository.existsById(itemRequestId)) {
-            throw new NoSuchElementException("Request id did not found!");
+            throw new NoSuchElementException("Request id #" + itemRequestId + " did not found!");
         }
         if (!userService.isExistUser(userId)) {
-            throw new NoSuchElementException("User id did not found!");
+            throw new NoSuchElementException("User id #" + userId + " did not found!");
         }
         ItemRequest request = itemRequestRepository.findById(itemRequestId).get();
         log.info("ItemRequest with id #{} found", itemRequestId);
