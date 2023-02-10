@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
         User user = UserMapper.INSTANCE.toUser(userDto);
         User createdUser;
         createdUser = userRepository.save(user);
-        log.info("User with id #{} saved", createdUser.getId());
+        log.info("User with id #{} was saved", createdUser.getId());
         return UserMapper.INSTANCE.toUserDto(createdUser);
     }
 
