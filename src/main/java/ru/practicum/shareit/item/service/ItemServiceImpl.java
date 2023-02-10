@@ -1,8 +1,10 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
@@ -24,18 +26,21 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Setter
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
     private static final Logger log = LoggerFactory.getLogger(ItemServiceImpl.class);
-    private final UserService userService;
-    private final BookingRepository bookingRepository;
-    private final ItemRepository itemRepository;
-    private final CommentRepository commentRepository;
+    private UserService userService;
+    private BookingRepository bookingRepository;
+    private ItemRepository itemRepository;
+    private CommentRepository commentRepository;
 
     @Override
     public ItemDto createItem(Long userId, ItemDto itemDto) {
-        userService.getUserById(userId);
+        if (!userService.isExistUser(userId)) {
+            throw new NoSuchElementException("User id # " + userId + " did not found!");
+        }
         Item item = itemRepository.save(ItemMapper.INSTANCE.toItem(itemDto, userId));
         log.info("Item with id #{} saved", item.getId());
         return ItemMapper.INSTANCE.toItemDto(item);
@@ -90,7 +95,7 @@ public class ItemServiceImpl implements ItemService {
             item.setAvailable(updatedItem.getAvailable());
         }
         item.setOwner(updatedItem.getOwner());
-        item.setRequest(updatedItem.getRequest());
+        item.setRequestId(updatedItem.getRequestId());
         log.info("Item with id #{} updated", item.getId());
         return ItemMapper.INSTANCE.toItemDto(itemRepository.save(item));
     }
@@ -101,8 +106,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDtoWithComments> getItems(long userId) {
-        Collection<Item> items = itemRepository.getItems(userId);
+    public Collection<ItemDtoWithComments> getItems(long userId, PageRequest pageRequest) {
+        Collection<Item> items = itemRepository.getItemsByOwnerOrderById(userId, pageRequest);
         if (items == null) {
             return null;
         } else {

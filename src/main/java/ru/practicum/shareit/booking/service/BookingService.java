@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.service;
 
+import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShort;
 import ru.practicum.shareit.booking.model.State;
@@ -15,7 +16,7 @@ public interface BookingService {
 
     BookingDto getBookingById(Long bookingId, Long userId) throws InvalidAccessException;
 
-    Collection<BookingDto> getBookingsOfUser(Long userId, State state);
+    Collection<BookingDto> getBookingsOfUser(Long userId, State state, PageRequest pageRequest);
 
-    Collection<BookingDto> getBookingsOfUsersItems(Long userId, State state);
+    Collection<BookingDto> getBookingsOfUsersItems(Long userId, State state, PageRequest pageRequest);
 }

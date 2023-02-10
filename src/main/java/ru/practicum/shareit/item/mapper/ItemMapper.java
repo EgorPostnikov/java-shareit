@@ -13,13 +13,11 @@ import java.util.Collection;
 public interface ItemMapper {
     ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
 
-    @Mapping(target = "requestId", source = "item.request.id")
     ItemDto toItemDto(Item item);
 
-    @Mapping(target = "requestId", source = "item.request.id")
     ItemDtoWithComments toItemDtoWithComments(Item item);
 
-    @Mapping(target = "owner", source = "userId")
+    @Mapping(target = "owner", expression = "java(userId)")
     Item toItem(ItemDto itemDto, Long userId);
 
     Collection<ItemDto> toItemDtos(Collection<Item> items);

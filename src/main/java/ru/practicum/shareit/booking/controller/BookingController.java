@@ -1,13 +1,15 @@
 package ru.practicum.shareit.booking.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionFailedException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShort;
 import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.booking.service.BookingServiceImpl;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.InvalidAccessException;
 import ru.practicum.shareit.response.Response;
@@ -19,12 +21,9 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping(path = "/bookings")
+@RequiredArgsConstructor
 public class BookingController {
     private final BookingService bookingService;
-
-    public BookingController(BookingServiceImpl bookingService) {
-        this.bookingService = bookingService;
-    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
@@ -51,15 +50,21 @@ public class BookingController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Collection<BookingDto> getBookingsOfUser(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                    @RequestParam(defaultValue = "ALL") State state) {
-        return bookingService.getBookingsOfUser(userId, state);
+                                                    @RequestParam(defaultValue = "ALL") State state,
+                                                    @RequestParam(defaultValue = "1") Integer from,
+                                                    @RequestParam(defaultValue = "100") Integer size) {
+        PageRequest pageRequest = PageRequest.of(from - 1, size, Sort.unsorted());
+        return bookingService.getBookingsOfUser(userId, state, pageRequest);
     }
 
     @GetMapping("/owner")
     @ResponseStatus(HttpStatus.OK)
     public Collection<BookingDto> getBookingsOfUsersItems(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                          @RequestParam(defaultValue = "ALL") State state) {
-        return bookingService.getBookingsOfUsersItems(userId, state);
+                                                          @RequestParam(defaultValue = "ALL") State state,
+                                                          @RequestParam(defaultValue = "0") Integer from,
+                                                          @RequestParam(defaultValue = "100") Integer size) {
+        PageRequest pageRequest = PageRequest.of(from, size, Sort.unsorted());
+        return bookingService.getBookingsOfUsersItems(userId, state, pageRequest);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

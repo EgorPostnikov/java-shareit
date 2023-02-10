@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.storage;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.item.model.Item;
@@ -12,7 +13,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             " or upper(i.name) like upper(concat('%', ?1, '%'))) ")
     Collection<Item> searchItems(String text);
 
-    @Query(" select i from Item i where (i.owner) = ?1 ORDER BY i.id")
-    Collection<Item> getItems(long userId);
+    Collection<Item> getItemsByOwnerOrderById(long userId, PageRequest pageRequest);
 
 }

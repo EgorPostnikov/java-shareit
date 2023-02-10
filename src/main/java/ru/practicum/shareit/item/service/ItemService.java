@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.service;
 
+import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.exception.InvalidAccessException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -22,7 +23,7 @@ public interface ItemService {
 
     void deleteItem(long itemId);
 
-    Collection<ItemDtoWithComments> getItems(long userId);
+    Collection<ItemDtoWithComments> getItems(long userId, PageRequest pageRequest);
 
     Collection<ItemDto> searchItems(String text);
 
