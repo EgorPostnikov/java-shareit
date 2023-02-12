@@ -28,7 +28,8 @@ public class ItemRequestController {
     @ResponseStatus(HttpStatus.OK)
     public ItemRequestDto createItemRequest(@RequestHeader("X-Sharer-User-Id") long userId,
                                             @Validated(Create.class) @RequestBody ItemRequestDto itemRequestDto) {
-        return itemRequestService.createItemRequest(userId, itemRequestDto);
+        itemRequestDto.setRequestor(userId);
+        return itemRequestService.createItemRequest(itemRequestDto);
     }
 
     @GetMapping

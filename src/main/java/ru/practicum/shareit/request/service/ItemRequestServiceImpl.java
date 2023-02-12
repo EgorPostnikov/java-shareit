@@ -26,7 +26,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
 
     @Override
-    public ItemRequestDto createItemRequest(long userId, ItemRequestDto itemRequestDto) {
+    public ItemRequestDto createItemRequest(ItemRequestDto itemRequestDto) {
+        long userId = itemRequestDto.getRequestor();
         ItemRequest request = ItemRequestMapper.INSTANCE.toItemRequest(itemRequestDto);
         if (!userService.isExistUser(userId)) {
             throw new NoSuchElementException("User id #" + userId + " did not found!");

@@ -240,7 +240,7 @@ public class RequestServiceTest {
                 .when(mockItemRequestRepository.save(Mockito.any()))
                 .thenReturn(itemRequest);
 
-        ItemRequestDto gotItemRequest = itemRequestServiceImpl.createItemRequest(1L, itemRequestDto);
+        ItemRequestDto gotItemRequest = itemRequestServiceImpl.createItemRequest( itemRequestDto);
 
         Assertions.assertEquals(itemRequest.getId(), gotItemRequest.getId());
         Assertions.assertEquals(itemRequest.getRequestor(), gotItemRequest.getRequestor());
@@ -260,7 +260,7 @@ public class RequestServiceTest {
 
         final NoSuchElementException exception = Assertions.assertThrows(
                 NoSuchElementException.class,
-                () -> itemRequestServiceImpl.createItemRequest(1L, itemRequestDto));
+                () -> itemRequestServiceImpl.createItemRequest(itemRequestDto));
 
         Assertions.assertEquals("User id #1 did not found!", exception.getMessage());
     }

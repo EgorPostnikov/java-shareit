@@ -5,6 +5,7 @@ import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShort;
@@ -13,6 +14,7 @@ import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.InvalidAccessException;
 import ru.practicum.shareit.response.Response;
+import ru.practicum.shareit.validation.Create;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
@@ -24,11 +26,13 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class BookingController {
     private final BookingService bookingService;
-
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                                    @RequestBody BookingShort bookingShort) throws BadRequestException {
+                                    @Validated(Create.class) @RequestBody BookingShort bookingShort) throws BadRequestException {
+        if (bookingShort.getEnd().isBefore(bookingShort.getStart())) {
+            throw new BadRequestException("Booking end time is before start time!");
+        }
         return bookingService.createBooking(userId, bookingShort);
     }
 

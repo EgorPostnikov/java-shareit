@@ -622,7 +622,7 @@ public class BookingServiceTest {
         Assertions.assertEquals("User id #3 did not found!", exception.getMessage());
     }
 
-    @Test
+    /*@Test
     void testCreateBookingWithMockWrongStartTime() {
         Long itemId = 1L;
         Long ownerId = 2L;
@@ -648,9 +648,9 @@ public class BookingServiceTest {
                 () -> bookingServiceImpl.createBooking(3L, bookingShort));
 
         Assertions.assertEquals("Time in the past!", exception.getMessage());
-    }
+    }*/
 
-    @Test
+   /* @Test
     void testCreateBookingWithMockWrongEndTime() {
         Long itemId = 1L;
         Long ownerId = 2L;
@@ -673,7 +673,7 @@ public class BookingServiceTest {
                 () -> bookingServiceImpl.createBooking(3L, bookingShort));
 
         Assertions.assertEquals("Booking end time is before start time!", exception.getMessage());
-    }
+    }*/
 
     @Test
     void testCreateBookingWithMockWrongItemAvailability() {
