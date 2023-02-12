@@ -75,7 +75,7 @@ public class UserControllerTest {
 
     @Test
     void updateUserTest() throws Exception {
-        when(userService.updateUser(anyLong(), any()))
+        when(userService.updateUser(any()))
                 .thenReturn(userDto);
 
         mvc.perform(patch("/users/2")

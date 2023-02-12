@@ -35,7 +35,8 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable long userId,
                               @RequestBody UserDto user) {
-        return userService.updateUser(userId, user);
+        user.setId(userId);
+        return userService.updateUser(user);
     }
 
     @DeleteMapping("/{userId}")

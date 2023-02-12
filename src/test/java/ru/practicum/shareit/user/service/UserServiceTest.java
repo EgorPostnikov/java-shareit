@@ -152,7 +152,7 @@ public class UserServiceTest {
                 .when(mockUserRepository.save(Mockito.any(User.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
-        UserDto gotUserDto = userServiceImpl.updateUser(1L, userDto);
+        UserDto gotUserDto = userServiceImpl.updateUser(userDto);
         Assertions.assertEquals(user.getId(), gotUserDto.getId());
         Assertions.assertEquals(user.getName(), gotUserDto.getName());
         Assertions.assertEquals(user.getEmail(), gotUserDto.getEmail());
