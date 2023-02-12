@@ -532,7 +532,7 @@ public class ItemServiceTest {
         Assertions.assertEquals("Item was not booked by author of comment", exception.getMessage());
     }
 
-    @Test
+    /*@Test
     void createComment3() {
         CommentDto wrongComment = comment;
         wrongComment.setText("   ");
@@ -543,6 +543,6 @@ public class ItemServiceTest {
                 () -> itemServiceImpl.createComment(wrongComment));
 
         Assertions.assertEquals("Text is empty", exception.getMessage());
-    }
+    }*/
 }
 

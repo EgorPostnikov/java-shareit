@@ -140,11 +140,6 @@ public class ItemServiceImpl implements ItemService {
         return ItemMapper.INSTANCE.toItemDtos(itemRepository.searchItems(text));
     }
 
-    @Override
-    public boolean isExistItem(Long itemId) {
-        return itemRepository.existsById(itemId);
-    }
-
     public ItemBookingDto getLastBooking(Long itemId) {
         LocalDateTime currentTime = LocalDateTime.now();
         List<Booking> bookings = bookingRepository.findBookingByItem_IdAndEndIsBeforeOrderByEndDesc(itemId, currentTime);
@@ -172,9 +167,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentDto createComment(CommentDto commentDto) {
         Long authorId = commentDto.getAuthorId();
-        if (commentDto.getText().isBlank()) {
-            throw new EntityNotFoundException("Text is empty");
-        }
+        //if (commentDto.getText().isBlank()) {
+        //    throw new EntityNotFoundException("Text is empty");
+        //}
         if (!bookingRepository.getBookedItemsIds(authorId, LocalDateTime.now()).contains(commentDto.getItem())) {
             throw new EntityNotFoundException("Item was not booked by author of comment");
         }
@@ -197,4 +192,8 @@ public class ItemServiceImpl implements ItemService {
         return itemOptional.get();
     }
 
+    @Override
+    public boolean isExistItem(Long itemId) {
+        return itemRepository.existsById(itemId);
+    }
 }

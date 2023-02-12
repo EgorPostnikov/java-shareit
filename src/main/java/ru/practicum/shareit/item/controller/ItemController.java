@@ -75,7 +75,7 @@ public class ItemController {
     @ResponseStatus(HttpStatus.OK)
     public CommentDto createComment(@PathVariable long itemId,
                                     @RequestHeader("X-Sharer-User-Id") long userId,
-                                    @RequestBody CommentDto commentDto) {
+                                    @Validated(Create.class) @RequestBody CommentDto commentDto) {
         commentDto.setItem(itemId);
         commentDto.setAuthorId(userId);
         return itemService.createComment(commentDto);
