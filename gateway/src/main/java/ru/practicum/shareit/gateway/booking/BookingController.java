@@ -16,6 +16,7 @@ import ru.practicum.shareit.gateway.exception.BadRequestException;
 import ru.practicum.shareit.gateway.exception.InvalidAccessException;
 import ru.practicum.shareit.gateway.response.Response;
 import ru.practicum.shareit.gateway.validation.Create;
+import ru.practicum.shareit.gateway.validation.ValidationException;
 
 
 import javax.persistence.EntityNotFoundException;
@@ -35,9 +36,9 @@ public class BookingController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                @Validated(Create.class) @RequestBody BookingShort bookingShort) throws BadRequestException {
+                                                @Validated(Create.class) @RequestBody BookingShort bookingShort)  {
         if (bookingShort.getEnd().isBefore(bookingShort.getStart())) {
-            throw new BadRequestException("Booking end time is before start time!");
+            throw new ValidationException("Booking end time is before start time!");
         }
         log.info("Create booking of userId={}", userId);
         return bookingClient.createBooking(userId, bookingShort);
@@ -47,7 +48,7 @@ public class BookingController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> updateBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
                                     @PathVariable long bookingId,
-                                    @RequestParam Boolean approved) {
+                                    @RequestParam String approved) {
         log.info("Change booking approving to -{}- of User with userId={}", approved, userId);
         return bookingClient.updateBooking(bookingId, userId, approved);
     }
@@ -114,6 +115,11 @@ public class BookingController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadRequestException.class)
     public Response handleException(BadRequestException exception) {
+        return new Response(exception.getMessage());
+    }
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(ValidationException.class)
+    public Response handleException(ValidationException exception) {
         return new Response(exception.getMessage());
     }
 

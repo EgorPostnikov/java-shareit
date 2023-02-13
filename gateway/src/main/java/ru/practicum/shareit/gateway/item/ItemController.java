@@ -8,10 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.exception.InvalidAccessException;
+import ru.practicum.shareit.gateway.item.dto.CommentDto;
 import ru.practicum.shareit.gateway.item.dto.ItemDto;
 import ru.practicum.shareit.gateway.response.Response;
 import ru.practicum.shareit.gateway.validation.Create;
-import ru.practicum.shareit.item.dto.CommentDto;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.Positive;

@@ -3,18 +3,14 @@ package ru.practicum.shareit.gateway.item.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.validation.Create;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import lombok.ToString;
 
 @Setter
 @Getter
 @AllArgsConstructor
+@ToString
 public class CommentDto {
     private Long id;
-    @NotNull(message = "Text is required.", groups = {Create.class})
-    @NotBlank(message = "Text is required.", groups = {Create.class})
     private String text;
     private Long item;
     private Long authorId;

@@ -2,13 +2,11 @@ package ru.practicum.shareit.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.response.Response;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.validation.Create;
-import ru.practicum.shareit.validation.ValidationException;
+
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -21,7 +19,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public UserDto createUser(@Validated(Create.class) @RequestBody UserDto user) {
+    public UserDto createUser(@RequestBody UserDto user) {
         return userService.createUser(user);
     }
 
@@ -57,10 +55,5 @@ public class UserController {
         return new Response(exception.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(ValidationException.class)
-    public Response handleException(ValidationException exception) {
-        return new Response(exception.getMessage());
-    }
 
 }

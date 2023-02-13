@@ -3,6 +3,7 @@ package ru.practicum.shareit.gateway.user;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import ru.practicum.shareit.gateway.validation.Create;
 import ru.practicum.shareit.gateway.validation.Update;
 
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Getter
 @AllArgsConstructor
+@ToString
 public class UserDto {
     private Long id;
     private String name;

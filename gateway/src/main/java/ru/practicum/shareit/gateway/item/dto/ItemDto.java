@@ -3,7 +3,9 @@ package ru.practicum.shareit.gateway.item.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.validation.Create;
+import lombok.ToString;
+import ru.practicum.shareit.gateway.validation.Create;
+
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -11,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Getter
 @AllArgsConstructor
+@ToString
 public class ItemDto {
     private Long id;
     @NotNull(message = "Name is required.", groups = {Create.class})

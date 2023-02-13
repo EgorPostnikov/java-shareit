@@ -31,18 +31,20 @@ public class BookingClient extends BaseClient {
         return post("", userId, null, bookingShort);
     }
 
-    public ResponseEntity<Object> updateBooking(long bookingId, Long userId, Boolean approved) {
+    public ResponseEntity<Object> updateBooking(long bookingId, Long userId, String approved) {
+
         Map<String, Object> parameters = Map.of(
                 "approved", approved
         );
-        return patch("/" + bookingId + "?approved={approved}", userId, parameters);
+        //return patch("/{bookingId}?approved={approved}", userId, parameters,null);
+        return patch("/"+bookingId+"?approved={approved}", userId, parameters, null);
     }
 
     public ResponseEntity<Object> getBookingById(long bookingId, Long userId) {
         return get("/" + bookingId, userId, null);
     }
 
-    public ResponseEntity<Object> getBookingsOfUser(Long userId, State state, int from, Integer size) {
+    public ResponseEntity<Object> getBookingsOfUser(Long userId, State state, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
                 "from", from,

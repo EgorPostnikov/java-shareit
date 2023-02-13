@@ -11,7 +11,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithComments;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.response.Response;
-import ru.practicum.shareit.validation.Create;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
@@ -29,7 +28,7 @@ public class ItemController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                              @Validated(Create.class) @RequestBody ItemDto itemDto) {
+                              @RequestBody ItemDto itemDto) {
         return itemService.createItem(userId, itemDto);
     }
 
@@ -75,7 +74,7 @@ public class ItemController {
     @ResponseStatus(HttpStatus.OK)
     public CommentDto createComment(@PathVariable long itemId,
                                     @RequestHeader("X-Sharer-User-Id") long userId,
-                                    @Validated(Create.class) @RequestBody CommentDto commentDto) {
+                                    @RequestBody CommentDto commentDto) {
         commentDto.setItem(itemId);
         commentDto.setAuthorId(userId);
         return itemService.createComment(commentDto);

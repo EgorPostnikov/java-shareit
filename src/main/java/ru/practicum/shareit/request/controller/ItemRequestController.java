@@ -3,13 +3,10 @@ package ru.practicum.shareit.request.controller;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.response.Response;
-import ru.practicum.shareit.validation.Create;
-import ru.practicum.shareit.validation.ValidationException;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
@@ -27,7 +24,7 @@ public class ItemRequestController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ItemRequestDto createItemRequest(@RequestHeader("X-Sharer-User-Id") long userId,
-                                            @Validated(Create.class) @RequestBody ItemRequestDto itemRequestDto) {
+                                             @RequestBody ItemRequestDto itemRequestDto) {
         itemRequestDto.setRequestor(userId);
         return itemRequestService.createItemRequest(itemRequestDto);
     }
@@ -63,12 +60,6 @@ public class ItemRequestController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EntityNotFoundException.class)
     public Response handleException(EntityNotFoundException exception) {
-        return new Response(exception.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(ValidationException.class)
-    public Response handleException(ValidationException exception) {
         return new Response(exception.getMessage());
     }
 
