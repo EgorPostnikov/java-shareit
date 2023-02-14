@@ -7,7 +7,6 @@ import ru.practicum.shareit.response.Response;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
-
 import java.util.Collection;
 import java.util.NoSuchElementException;
 

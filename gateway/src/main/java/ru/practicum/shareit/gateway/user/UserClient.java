@@ -32,11 +32,11 @@ public class UserClient extends BaseClient {
     }
 
     public ResponseEntity<Object> updateUser(UserDto user) {
-        return patch("/"+user.getId(), user.getId(), null, user);
+        return patch("/" + user.getId(), user.getId(), null, user);
     }
 
     public ResponseEntity<Object> deleteUser(long userId) {
-        return delete("/"+userId, userId, null);
+        return delete("/" + userId, userId, null);
     }
 
     public ResponseEntity<Object> getAllUsers() {

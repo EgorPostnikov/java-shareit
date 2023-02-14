@@ -211,22 +211,6 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.authorId", is(comment1.getAuthorId()), Long.class))
                 .andExpect(jsonPath("$.authorName", is(comment1.getAuthorName())));
     }
-    @Test
-    void createComment2() throws Exception {
-        CommentDto commentDto = comment1;
-        commentDto.setText("  ");
-        Long userId = 99L;
-        when(itemService.createComment(any()))
-                .thenReturn(comment1);
-
-        mvc.perform(post("/items/2/comment")
-                        .content(mapper.writeValueAsString(comment1))
-                        .header("X-Sharer-User-Id", userId)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
 
     @Test
     void handleExceptionTestNotFound() throws Exception {

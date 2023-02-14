@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import ru.practicum.shareit.response.Response;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -24,6 +22,7 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class BookingController {
     private final BookingService bookingService;
+
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
@@ -76,12 +75,6 @@ public class BookingController {
     @ExceptionHandler(EntityNotFoundException.class)
     public Response handleException(EntityNotFoundException exception) {
         return new Response(exception.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler()
-    public Map<String, String> handleConversionException(final ConversionFailedException e) {
-        return Map.of("error", "Unknown state: UNSUPPORTED_STATUS");
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

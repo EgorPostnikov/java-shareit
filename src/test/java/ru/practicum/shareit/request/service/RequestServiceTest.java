@@ -240,7 +240,7 @@ public class RequestServiceTest {
                 .when(mockItemRequestRepository.save(Mockito.any()))
                 .thenReturn(itemRequest);
 
-        ItemRequestDto gotItemRequest = itemRequestServiceImpl.createItemRequest( itemRequestDto);
+        ItemRequestDto gotItemRequest = itemRequestServiceImpl.createItemRequest(itemRequestDto);
 
         Assertions.assertEquals(itemRequest.getId(), gotItemRequest.getId());
         Assertions.assertEquals(itemRequest.getRequestor(), gotItemRequest.getRequestor());

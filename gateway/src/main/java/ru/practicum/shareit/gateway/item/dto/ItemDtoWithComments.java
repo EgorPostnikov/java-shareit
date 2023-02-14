@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.shareit.gateway.validation.Create;
 
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;

@@ -52,7 +52,7 @@ public class ItemRequestControllerTest {
     @Test
     void createItemRequest() throws Exception {
         Long userId = 99L;
-        when(itemRequestService.createItemRequest( any()))
+        when(itemRequestService.createItemRequest(any()))
                 .thenReturn(request1);
 
         mvc.perform(post("/requests")

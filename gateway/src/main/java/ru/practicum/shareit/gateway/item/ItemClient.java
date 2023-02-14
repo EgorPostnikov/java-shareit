@@ -11,7 +11,6 @@ import ru.practicum.shareit.gateway.client.BaseClient;
 import ru.practicum.shareit.gateway.item.dto.CommentDto;
 import ru.practicum.shareit.gateway.item.dto.ItemDto;
 
-
 import java.util.Map;
 
 @Service
@@ -33,11 +32,11 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getItemById(long itemId, Long userId) {
-        return get("/"+itemId, userId, null);
+        return get("/" + itemId, userId, null);
     }
 
     public ResponseEntity<Object> updateItem(Long userId, ItemDto item) {
-        return patch("/"+item.getId(), userId, null, item);
+        return patch("/" + item.getId(), userId, null, item);
     }
 
     public ResponseEntity<Object> deleteItem(long itemId) {
@@ -60,6 +59,6 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> createComment(CommentDto commentDto) {
-        return post("/"+commentDto.getItem()+"/comment", commentDto.getAuthorId(), null, commentDto);
+        return post("/" + commentDto.getItem() + "/comment", commentDto.getAuthorId(), null, commentDto);
     }
 }

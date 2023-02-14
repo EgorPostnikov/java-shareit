@@ -167,9 +167,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentDto createComment(CommentDto commentDto) {
         Long authorId = commentDto.getAuthorId();
-        //if (commentDto.getText().isBlank()) {
-        //    throw new EntityNotFoundException("Text is empty");
-        //}
         if (!bookingRepository.getBookedItemsIds(authorId, LocalDateTime.now()).contains(commentDto.getItem())) {
             throw new EntityNotFoundException("Item was not booked by author of comment");
         }

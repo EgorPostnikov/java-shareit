@@ -3,7 +3,6 @@ package ru.practicum.shareit.item.controller;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.exception.InvalidAccessException;
 import ru.practicum.shareit.item.dto.CommentDto;

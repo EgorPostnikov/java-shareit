@@ -221,21 +221,6 @@ public class BookingControllerTest {
     }
 
     @Test
-    void handleConversionException() throws Exception {
-        Long userId = 99L;
-        when(bookingService.createBooking(anyLong(), any()))
-                .thenThrow(new ConversionFailedException(null, null, null, null));
-        mvc.perform(post("/bookings")
-                        .content(mapper.writeValueAsString(booking1))
-                        .header("X-Sharer-User-Id", userId)
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.error", is("Unknown state: UNSUPPORTED_STATUS")));
-    }
-
-    @Test
     void handleInvalidAccessException() throws Exception {
         Long userId = 99L;
         when(bookingService.updateBooking(anyLong(), any(), any()))
