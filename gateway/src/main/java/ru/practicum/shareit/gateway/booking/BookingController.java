@@ -3,8 +3,6 @@ package ru.practicum.shareit.gateway.booking;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionFailedException;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,9 +18,6 @@ import ru.practicum.shareit.gateway.validation.ValidationException;
 
 
 import javax.persistence.EntityNotFoundException;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
-import java.util.Collection;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -36,9 +31,9 @@ public class BookingController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                @Validated(Create.class) @RequestBody BookingShort bookingShort)  {
+                                                @Validated(Create.class) @RequestBody BookingShort bookingShort) throws EntityNotFoundException  {
         if (bookingShort.getEnd().isBefore(bookingShort.getStart())) {
-            throw new ValidationException("Booking end time is before start time!");
+            throw new EntityNotFoundException("Booking end time is before start time!");
         }
         log.info("Create booking of userId={}", userId);
         return bookingClient.createBooking(userId, bookingShort);
@@ -66,12 +61,13 @@ public class BookingController {
     public ResponseEntity<Object> getBookingsOfUser(
             @RequestHeader("X-Sharer-User-Id") Long userId,
             @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
-            @PositiveOrZero @RequestParam(name = "from", defaultValue = "1") Integer from,
-            @Positive @RequestParam(name = "size", defaultValue = "100") Integer size) {
-           State state = State.from(stateParam)
+            @RequestParam(name = "from", defaultValue = "1") Integer from,
+            @RequestParam(name = "size", defaultValue = "100") Integer size) {
+            State state = State.from(stateParam)
                     .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
-            log.info("Get booking of User with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
-        return bookingClient.getBookingsOfUser(userId, state, from - 1, size);
+            log.info("Get booking of User with state {}, userId={}, from={}, size={}",
+                    stateParam, userId, from, size);
+        return bookingClient.getBookingsOfUser(userId, state, from-1, size);
     }
 
     @GetMapping("/owner")
@@ -79,8 +75,8 @@ public class BookingController {
     public ResponseEntity<Object> getBookingsOfUsersItems(
             @RequestHeader("X-Sharer-User-Id") Long userId,
             @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
-            @PositiveOrZero @RequestParam(name = "from", defaultValue = "1") Integer from,
-            @Positive @RequestParam(name = "size", defaultValue = "100") Integer size) {
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "100") Integer size) {
         State state = State.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
         log.info("Get booking of User's items with state {}, userId={}, from={}, size={}",
@@ -101,9 +97,9 @@ public class BookingController {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler()
-    public Map<String, String> handleConversionException(final ConversionFailedException e) {
-        return Map.of("error", "Unknown state: UNSUPPORTED_STATUS");
+    @ExceptionHandler(IllegalArgumentException.class)
+    public Error handleConversionException(final IllegalArgumentException e) {
+        return new Error("Unknown state: UNSUPPORTED_STATUS");
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

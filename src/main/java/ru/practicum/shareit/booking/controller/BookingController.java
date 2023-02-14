@@ -28,9 +28,6 @@ public class BookingController {
     @ResponseStatus(HttpStatus.OK)
     public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                     @RequestBody BookingShort bookingShort) throws BadRequestException {
-        if (bookingShort.getEnd().isBefore(bookingShort.getStart())) {
-            throw new BadRequestException("Booking end time is before start time!");
-        }
         return bookingService.createBooking(userId, bookingShort);
     }
 
@@ -53,9 +50,9 @@ public class BookingController {
     @ResponseStatus(HttpStatus.OK)
     public Collection<BookingDto> getBookingsOfUser(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                     @RequestParam(defaultValue = "ALL") State state,
-                                                    @RequestParam(defaultValue = "1") Integer from,
+                                                    @RequestParam(defaultValue = "0") Integer from,
                                                     @RequestParam(defaultValue = "100") Integer size) {
-        PageRequest pageRequest = PageRequest.of(from - 1, size, Sort.unsorted());
+        PageRequest pageRequest = PageRequest.of(from, size, Sort.unsorted());
         return bookingService.getBookingsOfUser(userId, state, pageRequest);
     }
 

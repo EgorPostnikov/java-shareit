@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
 @Slf4j
 //@Validated
 public class RequestController {
-    RequestClient requestClient;
+    private final RequestClient requestClient;
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)

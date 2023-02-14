@@ -3,6 +3,7 @@ package ru.practicum.shareit.gateway.booking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class BookingClient extends BaseClient {
         Map<String, Object> parameters = Map.of(
                 "approved", approved
         );
-        //return patch("/{bookingId}?approved={approved}", userId, parameters,null);
+
         return patch("/"+bookingId+"?approved={approved}", userId, parameters, null);
     }
 
@@ -44,13 +45,14 @@ public class BookingClient extends BaseClient {
         return get("/" + bookingId, userId, null);
     }
 
-    public ResponseEntity<Object> getBookingsOfUser(Long userId, State state, Integer from, Integer size) {
-        Map<String, Object> parameters = Map.of(
-                "state", state.name(),
-                "from", from,
-                "size", size
-        );
-        return get("?state={state}&from={from}&size={size}", userId, parameters);
+        public ResponseEntity<Object> getBookingsOfUser(long userId, State state, Integer from, Integer size) {
+            Map<String, Object> parameters = Map.of(
+                    "state", state.name(),
+                    "from", from,
+                    "size", size
+            );
+            return get("?state={state}&from={from}&size={size}", userId, parameters);
+
     }
 
     public ResponseEntity<Object> getBookingsOfUsersItems(Long userId, State state, Integer from, Integer size) {
@@ -58,6 +60,7 @@ public class BookingClient extends BaseClient {
                 "state", state.name(),
                 "from", from,
                 "size", size
+
         );
         return get("/owner?state={state}&from={from}&size={size}", userId, parameters);
     }
