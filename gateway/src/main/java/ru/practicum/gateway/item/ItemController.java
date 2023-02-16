@@ -47,7 +47,7 @@ public class ItemController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> updateItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                                              @PathVariable long itemId,
-                                             @RequestBody ItemDto item) throws InvalidAccessException {
+                                             @RequestBody ItemDto item) {
         item.setId(itemId);
         log.info("Update item by id {}, userId={}", itemId, userId);
         return itemClient.updateItem(userId, item);
@@ -72,8 +72,8 @@ public class ItemController {
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> searchItems(@RequestParam String text) {
-        if (text.isBlank() || text.isEmpty()) {
-            return (ResponseEntity<Object>) Collections.emptyList();
+        if (text.isEmpty()) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
         }
         log.info("Search items by text = {}", text);
         return itemClient.searchItems(text);

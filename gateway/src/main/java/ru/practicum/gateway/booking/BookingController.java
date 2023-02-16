@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.gateway.booking.dto.BookingShort;
@@ -16,22 +15,22 @@ import ru.practicum.gateway.validation.Create;
 import ru.practicum.gateway.validation.ValidationException;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
-@Controller
+@RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 @Slf4j
-//@Validated
 public class BookingController {
     private final BookingClient bookingClient;
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                @Validated(Create.class) @RequestBody BookingShort bookingShort) throws EntityNotFoundException {
+                                                @Validated(Create.class) @RequestBody BookingShort bookingShort) throws BadRequestException {
         if (bookingShort.getEnd().isBefore(bookingShort.getStart())) {
-            throw new EntityNotFoundException("Booking end time is before start time!");
+            throw new BadRequestException("Booking end time is before start time!");
         }
         log.info("Create booking of userId={}", userId);
         return bookingClient.createBooking(userId, bookingShort);
@@ -94,10 +93,16 @@ public class BookingController {
         return new Response(exception.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    /*@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(IllegalArgumentException.class)
     public Error handleConversionException(final IllegalArgumentException e) {
         return new Error("Unknown state: UNSUPPORTED_STATUS");
+    }*/
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public Map<String, String> handleNegativeCount(final IllegalArgumentException e) {
+        return Map.of("error", "Unknown state: UNSUPPORTED_STATUS");
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
