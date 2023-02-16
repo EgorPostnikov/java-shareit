@@ -133,9 +133,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Collection<ItemDto> searchItems(String text) {
         text = text.toLowerCase();
-        if (text.isEmpty()) {
-            return Collections.emptyList();
-        }
         log.info("List of items, containing text -{}- got", text);
         return ItemMapper.INSTANCE.toItemDtos(itemRepository.searchItems(text));
     }
@@ -172,9 +169,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentDto createComment(CommentDto commentDto) {
         Long authorId = commentDto.getAuthorId();
-        if (commentDto.getText().isBlank()) {
-            throw new EntityNotFoundException("Text is empty");
-        }
         if (!bookingRepository.getBookedItemsIds(authorId, LocalDateTime.now()).contains(commentDto.getItem())) {
             throw new EntityNotFoundException("Item was not booked by author of comment");
         }

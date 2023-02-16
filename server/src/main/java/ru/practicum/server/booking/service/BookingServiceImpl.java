@@ -47,13 +47,6 @@ public class BookingServiceImpl implements BookingService {
         if (!item.getAvailable()) {
             throw new BadRequestException("Item id#" + item.getId() + " not available for booking!");
         }
-        if (bookingShort.getEnd().isBefore(bookingShort.getStart())) {
-            throw new BadRequestException("Booking end time is before start time!");
-        }
-        if (bookingShort.getEnd().isBefore(LocalDateTime.now())
-                || (bookingShort.getStart().isBefore(LocalDateTime.now()))) {
-            throw new BadRequestException("Time in the past!");
-        }
         if (itemService.getOwnerOfItem(bookingShort.getItemId()).equals(userId)) {
             throw new NoSuchElementException("Id's not correct!");
         }

@@ -15,8 +15,10 @@ import ru.practicum.gateway.validation.Create;
 
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.Collections;
 import java.util.NoSuchElementException;
 
 @Controller
@@ -72,6 +74,9 @@ public class ItemController {
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> searchItems(@RequestParam String text) {
+        if (text.isBlank()||text.isEmpty()) {
+            return (ResponseEntity<Object>) Collections.emptyList();
+        }
         log.info("Search items by text = {}", text);
         return itemClient.searchItems(text);
     }

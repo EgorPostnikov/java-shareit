@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.server.request.dto.ItemRequestDto;
 import ru.practicum.server.request.service.ItemRequestService;
 import ru.practicum.server.response.Response;
-import ru.practicum.server.validation.Create;
-import ru.practicum.server.validation.ValidationException;
+
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
@@ -27,7 +26,7 @@ public class ItemRequestController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ItemRequestDto createItemRequest(@RequestHeader("X-Sharer-User-Id") long userId,
-                                            @Validated(Create.class) @RequestBody ItemRequestDto itemRequestDto) {
+                                            @RequestBody ItemRequestDto itemRequestDto) {
         return itemRequestService.createItemRequest(userId, itemRequestDto);
     }
 
@@ -65,11 +64,6 @@ public class ItemRequestController {
         return new Response(exception.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(ValidationException.class)
-    public Response handleException(ValidationException exception) {
-        return new Response(exception.getMessage());
-    }
 
 
 }

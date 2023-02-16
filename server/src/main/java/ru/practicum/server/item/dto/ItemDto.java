@@ -3,7 +3,6 @@ package ru.practicum.server.item.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.server.validation.Create;
 
 
 @Setter

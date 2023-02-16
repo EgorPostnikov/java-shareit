@@ -11,7 +11,7 @@ import ru.practicum.server.exception.InvalidAccessException;
 import ru.practicum.server.item.dto.CommentDto;
 import ru.practicum.server.item.dto.ItemDtoWithComments;
 import ru.practicum.server.response.Response;
-import ru.practicum.server.validation.Create;
+
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
@@ -29,7 +29,7 @@ public class ItemController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                              @Validated(Create.class) @RequestBody ItemDto itemDto) {
+                              @RequestBody ItemDto itemDto) {
         return itemService.createItem(userId, itemDto);
     }
 
