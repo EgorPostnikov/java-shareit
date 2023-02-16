@@ -5,9 +5,9 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.practicum.server.user.dto.UserDto;
 import ru.practicum.server.user.mapper.UserMapper;
 import ru.practicum.server.user.model.User;
-import ru.practicum.server.user.dto.UserDto;
 import ru.practicum.server.user.storage.UserRepository;
 
 import java.util.Collection;

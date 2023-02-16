@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.gateway.response.Response;
-import ru.practicum.gateway.validation.ValidationException;
 import ru.practicum.gateway.validation.Create;
+import ru.practicum.gateway.validation.ValidationException;
 
 import java.util.NoSuchElementException;
 

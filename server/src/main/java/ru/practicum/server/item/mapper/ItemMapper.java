@@ -4,8 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import ru.practicum.server.item.dto.ItemDto;
-import ru.practicum.server.item.model.Item;
 import ru.practicum.server.item.dto.ItemDtoWithComments;
+import ru.practicum.server.item.model.Item;
 
 import java.util.Collection;
 

@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.gateway.booking.dto.State;
-import ru.practicum.gateway.response.Response;
 import ru.practicum.gateway.booking.dto.BookingShort;
+import ru.practicum.gateway.booking.dto.State;
 import ru.practicum.gateway.exception.BadRequestException;
 import ru.practicum.gateway.exception.InvalidAccessException;
-import ru.practicum.gateway.validation.ValidationException;
+import ru.practicum.gateway.response.Response;
 import ru.practicum.gateway.validation.Create;
+import ru.practicum.gateway.validation.ValidationException;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.NoSuchElementException;
@@ -59,13 +59,13 @@ public class BookingController {
     public ResponseEntity<Object> getBookingsOfUser(
             @RequestHeader("X-Sharer-User-Id") Long userId,
             @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
-            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "from", defaultValue = "1") Integer from,
             @RequestParam(name = "size", defaultValue = "100") Integer size) {
         State state = State.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
         log.info("Get booking of User with state {}, userId={}, from={}, size={}",
                 stateParam, userId, from, size);
-        return bookingClient.getBookingsOfUser(userId, state, from , size);
+        return bookingClient.getBookingsOfUser(userId, state, from - 1, size);
     }
 
     @GetMapping("/owner")

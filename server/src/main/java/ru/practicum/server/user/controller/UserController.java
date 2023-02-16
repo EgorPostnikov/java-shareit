@@ -2,11 +2,10 @@ package ru.practicum.server.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.server.response.Response;
-import ru.practicum.server.user.service.UserService;
 import ru.practicum.server.user.dto.UserDto;
+import ru.practicum.server.user.service.UserService;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -19,7 +18,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public UserDto createUser( @RequestBody UserDto user) {
+    public UserDto createUser(@RequestBody UserDto user) {
         return userService.createUser(user);
     }
 

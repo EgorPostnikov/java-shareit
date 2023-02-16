@@ -7,15 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.gateway.exception.InvalidAccessException;
 import ru.practicum.gateway.item.dto.CommentDto;
 import ru.practicum.gateway.item.dto.ItemDto;
 import ru.practicum.gateway.response.Response;
-import ru.practicum.gateway.exception.InvalidAccessException;
 import ru.practicum.gateway.validation.Create;
 
-
 import javax.persistence.EntityNotFoundException;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.Collections;
@@ -74,7 +72,7 @@ public class ItemController {
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> searchItems(@RequestParam String text) {
-        if (text.isBlank()||text.isEmpty()) {
+        if (text.isBlank() || text.isEmpty()) {
             return (ResponseEntity<Object>) Collections.emptyList();
         }
         log.info("Search items by text = {}", text);

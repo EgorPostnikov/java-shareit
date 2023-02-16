@@ -2,8 +2,8 @@ package ru.practicum.server.user.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import ru.practicum.server.user.model.User;
 import ru.practicum.server.user.dto.UserDto;
+import ru.practicum.server.user.model.User;
 
 import java.util.Collection;
 

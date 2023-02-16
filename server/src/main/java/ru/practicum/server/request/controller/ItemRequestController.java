@@ -3,12 +3,10 @@ package ru.practicum.server.request.controller;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.server.request.dto.ItemRequestDto;
 import ru.practicum.server.request.service.ItemRequestService;
 import ru.practicum.server.response.Response;
-
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
@@ -63,7 +61,6 @@ public class ItemRequestController {
     public Response handleException(EntityNotFoundException exception) {
         return new Response(exception.getMessage());
     }
-
 
 
 }
