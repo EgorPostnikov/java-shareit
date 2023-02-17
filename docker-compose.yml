@@ -20,8 +20,8 @@ services:
       - db
     environment:
       - SPRING_DATASOURSCE_URL=jdbc:postgresql://db:5432/shareit
-      - POSTGRES_USER=sa
       - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=sa
       - TZ=Europe/Moscow
 
   db:
