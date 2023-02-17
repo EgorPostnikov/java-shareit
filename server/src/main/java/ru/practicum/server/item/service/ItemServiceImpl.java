@@ -144,7 +144,8 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemBookingDto getLastBooking(Long itemId) {
         LocalDateTime currentTime = LocalDateTime.now();
-        List<Booking> bookings = bookingRepository.findBookingByItem_IdAndEndIsBeforeOrderByEndDesc(itemId, currentTime);
+        List<Booking> bookings = bookingRepository.findBookingByItem_IdAndEndIsBeforeOrderByEndDesc(itemId,
+                currentTime);
         if (bookings.isEmpty()) {
             return null;
         } else {
